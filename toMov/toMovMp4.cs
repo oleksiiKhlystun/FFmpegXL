@@ -62,17 +62,14 @@ namespace toMov
         private void btnSelConvert_Click(object sender, EventArgs e)
         {
             // select file from computer         
-            try
-            {
-                foreach (var rb in Controls.OfType<RadioButton>())
-                    if (rb.Checked)
-                    {
-                        finalFormat = rb.Text;
-                    }
+				foreach (var rb in Controls.OfType<RadioButton>())
+                if (rb.Checked)
+                {
+                 finalFormat = rb.Text;
+                }
                 // Configure open file dialog box
                 OpenFileDialog selectFileDialog = new OpenFileDialog();
                 selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv"; // Filter files by extension
-
                 if (selectFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     selectFile = $" \"{selectFileDialog.FileName}\" ";
@@ -81,21 +78,10 @@ namespace toMov
                     finalCommand = "/c ffmpeg -i" + selectFile + outFps + removeSound + outFile;
  //                   MessageBox.Show(finalCommand); // testing final command
                                                    // Converting
+				    ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
+					procStartInfo.Arguments = finalCommand;
+					Process.Start(procStartInfo);							   
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error: " + ex.Message);
-            }
-            finally
-            {
-                ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
-                procStartInfo.Arguments = finalCommand;
-                Process.Start(procStartInfo);
-  //              MessageBox.Show($"Save{outFile}");
-            }
-        }
-
-        
+        }       
     }
 }
