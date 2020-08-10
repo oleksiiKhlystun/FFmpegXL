@@ -65,18 +65,18 @@ namespace toMov
 				foreach (var rb in Controls.OfType<RadioButton>())
                 if (rb.Checked)
                 {
-                 finalFormat = rb.Text;
+                 finalFormat = "." + rb.Text;
                 }
                 // Configure open file dialog box
                 OpenFileDialog selectFileDialog = new OpenFileDialog();
-                selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv"; // Filter files by extension
+            selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm"; // Filter files by extension
                 if (selectFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     selectFile = $" \"{selectFileDialog.FileName}\" ";
-                    outFile = $"{selectFile.Remove(selectFile.Length - 5)}{finalFormat}\"";
+                    outFile = $"{selectFile.Remove(selectFile.Length - 6)}{finalFormat}\"";
                     outFps = $" -r {upDownFps.Value} ";
                     finalCommand = "/c ffmpeg -i" + selectFile + outFps + removeSound + outFile;
- //                   MessageBox.Show(finalCommand); // testing final command
+                  //  MessageBox.Show(finalCommand); // testing final command
                                                    // Converting
 				    ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
 					procStartInfo.Arguments = finalCommand;
