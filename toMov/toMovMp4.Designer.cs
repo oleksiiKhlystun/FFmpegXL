@@ -33,11 +33,12 @@ namespace toMov
             this.radioBtn_mov = new System.Windows.Forms.RadioButton();
             this.radioBtn_mp4 = new System.Windows.Forms.RadioButton();
             this.radioBtn_avi = new System.Windows.Forms.RadioButton();
-            this.radioBtn_mkv = new System.Windows.Forms.RadioButton();
             this.chboxSound = new System.Windows.Forms.CheckBox();
             this.btnSelConvert = new System.Windows.Forms.Button();
             this.label = new System.Windows.Forms.Label();
             this.upDownFps = new System.Windows.Forms.NumericUpDown();
+            this.radioBtn_png = new System.Windows.Forms.RadioButton();
+            this.chboxResize2 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,7 +47,7 @@ namespace toMov
             this.radioBtn_mov.AutoSize = true;
             this.radioBtn_mov.Checked = true;
             this.radioBtn_mov.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioBtn_mov.Location = new System.Drawing.Point(15, 66);
+            this.radioBtn_mov.Location = new System.Drawing.Point(15, 98);
             this.radioBtn_mov.Name = "radioBtn_mov";
             this.radioBtn_mov.Size = new System.Drawing.Size(52, 21);
             this.radioBtn_mov.TabIndex = 0;
@@ -59,7 +60,7 @@ namespace toMov
             // 
             this.radioBtn_mp4.AutoSize = true;
             this.radioBtn_mp4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioBtn_mp4.Location = new System.Drawing.Point(69, 66);
+            this.radioBtn_mp4.Location = new System.Drawing.Point(69, 98);
             this.radioBtn_mp4.Name = "radioBtn_mp4";
             this.radioBtn_mp4.Size = new System.Drawing.Size(53, 21);
             this.radioBtn_mp4.TabIndex = 1;
@@ -71,25 +72,13 @@ namespace toMov
             // 
             this.radioBtn_avi.AutoSize = true;
             this.radioBtn_avi.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioBtn_avi.Location = new System.Drawing.Point(15, 89);
+            this.radioBtn_avi.Location = new System.Drawing.Point(15, 121);
             this.radioBtn_avi.Name = "radioBtn_avi";
             this.radioBtn_avi.Size = new System.Drawing.Size(44, 21);
             this.radioBtn_avi.TabIndex = 2;
             this.radioBtn_avi.Text = "avi";
             this.radioBtn_avi.UseVisualStyleBackColor = true;
             this.radioBtn_avi.CheckedChanged += new System.EventHandler(this.radioBtn_avi_CheckedChanged);
-            // 
-            // radioBtn_mkv
-            // 
-            this.radioBtn_mkv.AutoSize = true;
-            this.radioBtn_mkv.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioBtn_mkv.Location = new System.Drawing.Point(69, 89);
-            this.radioBtn_mkv.Name = "radioBtn_mkv";
-            this.radioBtn_mkv.Size = new System.Drawing.Size(51, 21);
-            this.radioBtn_mkv.TabIndex = 3;
-            this.radioBtn_mkv.Text = "mkv";
-            this.radioBtn_mkv.UseVisualStyleBackColor = true;
-            this.radioBtn_mkv.CheckedChanged += new System.EventHandler(this.radioBtn_mkv_CheckedChanged);
             // 
             // chboxSound
             // 
@@ -106,7 +95,7 @@ namespace toMov
             // btnSelConvert
             // 
             this.btnSelConvert.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSelConvert.Location = new System.Drawing.Point(15, 116);
+            this.btnSelConvert.Location = new System.Drawing.Point(15, 148);
             this.btnSelConvert.Name = "btnSelConvert";
             this.btnSelConvert.Size = new System.Drawing.Size(122, 23);
             this.btnSelConvert.TabIndex = 5;
@@ -139,16 +128,41 @@ namespace toMov
             0});
             this.upDownFps.ValueChanged += new System.EventHandler(this.upDownFps_ValueChanged);
             // 
+            // radioBtn_png
+            // 
+            this.radioBtn_png.AutoSize = true;
+            this.radioBtn_png.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.radioBtn_png.Location = new System.Drawing.Point(69, 121);
+            this.radioBtn_png.Name = "radioBtn_png";
+            this.radioBtn_png.Size = new System.Drawing.Size(49, 20);
+            this.radioBtn_png.TabIndex = 9;
+            this.radioBtn_png.TabStop = true;
+            this.radioBtn_png.Text = "png";
+            this.radioBtn_png.UseVisualStyleBackColor = true;
+            // 
+            // chboxResize2
+            // 
+            this.chboxResize2.AutoSize = true;
+            this.chboxResize2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.chboxResize2.Location = new System.Drawing.Point(15, 74);
+            this.chboxResize2.Name = "chboxResize2";
+            this.chboxResize2.Size = new System.Drawing.Size(77, 21);
+            this.chboxResize2.TabIndex = 10;
+            this.chboxResize2.Text = "resize\\2";
+            this.chboxResize2.UseVisualStyleBackColor = true;
+            this.chboxResize2.CheckedChanged += new System.EventHandler(this.chboxResize2_CheckedChanged);
+            // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(153, 159);
+            this.ClientSize = new System.Drawing.Size(153, 183);
+            this.Controls.Add(this.chboxResize2);
+            this.Controls.Add(this.radioBtn_png);
             this.Controls.Add(this.upDownFps);
             this.Controls.Add(this.label);
             this.Controls.Add(this.btnSelConvert);
             this.Controls.Add(this.chboxSound);
-            this.Controls.Add(this.radioBtn_mkv);
             this.Controls.Add(this.radioBtn_avi);
             this.Controls.Add(this.radioBtn_mp4);
             this.Controls.Add(this.radioBtn_mov);
@@ -167,11 +181,12 @@ namespace toMov
         private System.Windows.Forms.RadioButton radioBtn_mov;
         private System.Windows.Forms.RadioButton radioBtn_mp4;
         private System.Windows.Forms.RadioButton radioBtn_avi;
-        private System.Windows.Forms.RadioButton radioBtn_mkv;
         private System.Windows.Forms.CheckBox chboxSound;
         private System.Windows.Forms.Button btnSelConvert;
         private System.Windows.Forms.Label label;
         private System.Windows.Forms.NumericUpDown upDownFps;
+        private System.Windows.Forms.RadioButton radioBtn_png;
+        private System.Windows.Forms.CheckBox chboxResize2;
     }
 }
 

@@ -15,6 +15,7 @@ namespace toMov
         //ffmpeg -i test.avi testConvert.mov.
         private string finalFormat;
         private string removeSound;
+        private string resize2;
         private string selectFile;
         private string outFile;
         private string outFps;
@@ -39,16 +40,28 @@ namespace toMov
             CheckBox chboxSound = (CheckBox)sender;
             if (chboxSound.Checked)
             {
-                 removeSound = " -an ";
+                removeSound = " -an ";
             }
             else
             {
                  removeSound = "";
             }
         }
-        private void radioBtn_mkv_CheckedChanged(object sender, EventArgs e)
+        private void chboxResize2_CheckedChanged(object sender, EventArgs e)
         {
+            CheckBox chboxSound = (CheckBox)sender;
+            if (chboxResize2.Checked)
+            {
+                resize2 = @" -vf scale=""iw/2:ih/2"" ";
+                //  format640x480 = " -s 640x480 ";
+            }
+            else
+            {
+                resize2 = "";
+            }
         }
+
+
         private void radioBtn_mov_CheckedChanged(object sender, EventArgs e)
         {
         }
@@ -62,26 +75,30 @@ namespace toMov
         private void btnSelConvert_Click(object sender, EventArgs e)
         {
             // select file from computer         
-				foreach (var rb in Controls.OfType<RadioButton>())
+            foreach (var rb in Controls.OfType<RadioButton>())
                 if (rb.Checked)
                 {
-                 finalFormat = "." + rb.Text;
+                    finalFormat = rb.Text != "png" ? (finalFormat = "." + rb.Text) : (finalFormat = "-%03d." + rb.Text);
+                      //  finalFormat = "." + rb.Text;
                 }
                 // Configure open file dialog box
                 OpenFileDialog selectFileDialog = new OpenFileDialog();
-            selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm"; // Filter files by extension
+                selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm"; // Filter files by extension
                 if (selectFileDialog.ShowDialog() == DialogResult.OK)
                 {
                     selectFile = $" \"{selectFileDialog.FileName}\" ";
                     outFile = $"{selectFile.Remove(selectFile.Length - 6)}{finalFormat}\"";
                     outFps = $" -r {upDownFps.Value} ";
-                    finalCommand = "/c ffmpeg -i" + selectFile + outFps + removeSound + outFile;
-                  //  MessageBox.Show(finalCommand); // testing final command
-                                                   // Converting
-				    ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
-					procStartInfo.Arguments = finalCommand;
-					Process.Start(procStartInfo);							   
-                }
-        }       
+                    
+                    finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + outFile;
+                //   MessageBox.Show(finalCommand); // testing final command
+                // Converting
+                    ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
+                    procStartInfo.Arguments = finalCommand;
+                    Process.Start(procStartInfo);
+            }
+        }
+
+       
     }
 }
