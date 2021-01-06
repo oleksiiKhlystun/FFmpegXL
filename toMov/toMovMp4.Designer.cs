@@ -35,10 +35,10 @@ namespace toMov
             this.radioBtn_avi = new System.Windows.Forms.RadioButton();
             this.chboxSound = new System.Windows.Forms.CheckBox();
             this.btnSelConvert = new System.Windows.Forms.Button();
-            this.label = new System.Windows.Forms.Label();
             this.upDownFps = new System.Windows.Forms.NumericUpDown();
             this.radioBtn_png = new System.Windows.Forms.RadioButton();
             this.chboxResize2 = new System.Windows.Forms.CheckBox();
+            this.chboxFps = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,7 +95,7 @@ namespace toMov
             // btnSelConvert
             // 
             this.btnSelConvert.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSelConvert.Location = new System.Drawing.Point(15, 148);
+            this.btnSelConvert.Location = new System.Drawing.Point(15, 208);
             this.btnSelConvert.Name = "btnSelConvert";
             this.btnSelConvert.Size = new System.Drawing.Size(122, 23);
             this.btnSelConvert.TabIndex = 5;
@@ -103,21 +103,10 @@ namespace toMov
             this.btnSelConvert.UseVisualStyleBackColor = true;
             this.btnSelConvert.Click += new System.EventHandler(this.btnSelConvert_Click);
             // 
-            // label
-            // 
-            this.label.AutoSize = true;
-            this.label.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label.Location = new System.Drawing.Point(12, 19);
-            this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(68, 17);
-            this.label.TabIndex = 6;
-            this.label.Text = "Finish fps";
-            this.label.Click += new System.EventHandler(this.label_Click);
-            // 
             // upDownFps
             // 
             this.upDownFps.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.upDownFps.Location = new System.Drawing.Point(95, 17);
+            this.upDownFps.Location = new System.Drawing.Point(95, 16);
             this.upDownFps.Name = "upDownFps";
             this.upDownFps.Size = new System.Drawing.Size(42, 23);
             this.upDownFps.TabIndex = 7;
@@ -152,15 +141,27 @@ namespace toMov
             this.chboxResize2.UseVisualStyleBackColor = true;
             this.chboxResize2.CheckedChanged += new System.EventHandler(this.chboxResize2_CheckedChanged);
             // 
+            // chboxFps
+            // 
+            this.chboxFps.AutoSize = true;
+            this.chboxFps.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.chboxFps.Location = new System.Drawing.Point(15, 17);
+            this.chboxFps.Name = "chboxFps";
+            this.chboxFps.Size = new System.Drawing.Size(69, 21);
+            this.chboxFps.TabIndex = 11;
+            this.chboxFps.Text = "fin_fps";
+            this.chboxFps.UseVisualStyleBackColor = true;
+            this.chboxFps.CheckedChanged += new System.EventHandler(this.chboxFps_CheckedChanged);
+            // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(153, 183);
+            this.ClientSize = new System.Drawing.Size(153, 243);
+            this.Controls.Add(this.chboxFps);
             this.Controls.Add(this.chboxResize2);
             this.Controls.Add(this.radioBtn_png);
             this.Controls.Add(this.upDownFps);
-            this.Controls.Add(this.label);
             this.Controls.Add(this.btnSelConvert);
             this.Controls.Add(this.chboxSound);
             this.Controls.Add(this.radioBtn_avi);
@@ -183,10 +184,10 @@ namespace toMov
         private System.Windows.Forms.RadioButton radioBtn_avi;
         private System.Windows.Forms.CheckBox chboxSound;
         private System.Windows.Forms.Button btnSelConvert;
-        private System.Windows.Forms.Label label;
         private System.Windows.Forms.NumericUpDown upDownFps;
         private System.Windows.Forms.RadioButton radioBtn_png;
         private System.Windows.Forms.CheckBox chboxResize2;
+        private System.Windows.Forms.CheckBox chboxFps;
     }
 }
 

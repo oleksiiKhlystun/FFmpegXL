@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Linq;
+using System.IO;
 
 namespace toMov
 {
@@ -28,40 +29,20 @@ namespace toMov
         private void Form1_Load(object sender, EventArgs e)
         {
         }
-        private void label_Click(object sender, EventArgs e)
-        {
-        }
         private void upDownFps_ValueChanged(object sender, EventArgs e)
         {
             NumericUpDown upDownFps = (NumericUpDown)sender;
         }
+        private void chboxFps_CheckedChanged(object sender, EventArgs e)
+        {   
+        }
+       
         private void chboxSound_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox chboxSound = (CheckBox)sender;
-            if (chboxSound.Checked)
-            {
-                removeSound = " -an ";
-            }
-            else
-            {
-                 removeSound = "";
-            }
         }
         private void chboxResize2_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox chboxSound = (CheckBox)sender;
-            if (chboxResize2.Checked)
-            {
-                resize2 = @" -vf scale=""iw/2:ih/2"" ";
-                //  format640x480 = " -s 640x480 ";
-            }
-            else
-            {
-                resize2 = "";
-            }
         }
-
-
         private void radioBtn_mov_CheckedChanged(object sender, EventArgs e)
         {
         }
@@ -74,31 +55,40 @@ namespace toMov
 
         private void btnSelConvert_Click(object sender, EventArgs e)
         {
-            // select file from computer         
+            outFps = chboxFps.Checked ? $" -r {upDownFps.Value} " : "";
+            removeSound = chboxSound.Checked ? " -an " : "";
+            resize2 = chboxResize2.Checked ? @" -vf scale=""iw/2:ih/2"" " : "";
+            //foreach (var ch in Controls.OfType<CheckBox>())
             foreach (var rb in Controls.OfType<RadioButton>())
                 if (rb.Checked)
                 {
                     finalFormat = rb.Text != "png" ? (finalFormat = "." + rb.Text) : (finalFormat = "-%03d." + rb.Text);
-                      //  finalFormat = "." + rb.Text;
+                    // Configure open file dialog box
+                    OpenFileDialog selectFileDialog = new OpenFileDialog();
+                    selectFileDialog.Multiselect = true;
+                    selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm"; // Filter files by extension
+                    if (selectFileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (string file in selectFileDialog.FileNames)
+                        {
+                            selectFile = $" \"{file}\" ";
+                            outFile = $"{selectFile.Remove(selectFile.Length - 6)}{finalFormat}\"";
+
+                            finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + outFile;
+                            // MessageBox.Show(finalCommand); // testing final command
+                            // Converting
+                            ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
+                            procStartInfo.Arguments = finalCommand;
+                            Process.Start(procStartInfo);
+
+                        }
+
+                    }   //  finalFormat = "." + rb.Text;
                 }
-                // Configure open file dialog box
-                OpenFileDialog selectFileDialog = new OpenFileDialog();
-                selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm"; // Filter files by extension
-                if (selectFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    selectFile = $" \"{selectFileDialog.FileName}\" ";
-                    outFile = $"{selectFile.Remove(selectFile.Length - 6)}{finalFormat}\"";
-                    outFps = $" -r {upDownFps.Value} ";
-                    
-                    finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + outFile;
-                //   MessageBox.Show(finalCommand); // testing final command
-                // Converting
-                    ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
-                    procStartInfo.Arguments = finalCommand;
-                    Process.Start(procStartInfo);
-            }
         }
 
-       
+
+
+     
     }
 }
