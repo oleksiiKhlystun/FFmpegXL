@@ -21,7 +21,10 @@ namespace toMov
         private string outFile;
         private string outFps;
         private string finalCommand;
-        
+        private string fast;
+        private string trimSS;
+        private string trimTo;
+
         public toMovMp4()
         {
             InitializeComponent();
@@ -34,7 +37,12 @@ namespace toMov
             NumericUpDown upDownFps = (NumericUpDown)sender;
         }
         private void chboxFps_CheckedChanged(object sender, EventArgs e)
-        {   
+        {
+            CheckBox chboxFps = (CheckBox)sender;
+            if (chboxFps.Checked)
+            {
+                chboxFast.Checked = false;              
+            }
         }
        
         private void chboxSound_CheckedChanged(object sender, EventArgs e)
@@ -42,7 +50,44 @@ namespace toMov
         }
         private void chboxResize2_CheckedChanged(object sender, EventArgs e)
         {
+            CheckBox chboxResize2 = (CheckBox)sender;
+            if (chboxResize2.Checked)
+            {
+                chboxFast.Checked = false;
+            }
         }
+        private void chboxTrim_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chboxTrim = (CheckBox)sender;
+            if (chboxTrim.Checked)
+            {
+                chboxFast.Checked = false;
+            }
+            else if(chboxTrim.Checked == false)
+            {
+                chboxTo.Checked = false;
+            }
+        }
+        private void chboxTo_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chboxTo = (CheckBox)sender;
+            if (chboxTo.Checked)
+            {
+
+                chboxFast.Checked = false;
+            }
+        }
+        private void chboxFast_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckBox chboxFast = (CheckBox)sender;
+            if (chboxFast.Checked)
+            {
+                chboxResize2.Checked = false;
+                chboxFps.Checked = false;
+                chboxTrim.Checked = false;
+            }
+        }
+
         private void radioBtn_mov_CheckedChanged(object sender, EventArgs e)
         {
         }
@@ -58,6 +103,10 @@ namespace toMov
             outFps = chboxFps.Checked ? $" -r {upDownFps.Value} " : "";
             removeSound = chboxSound.Checked ? " -an " : "";
             resize2 = chboxResize2.Checked ? @" -vf scale=""iw/2:ih/2"" " : "";
+            fast = chboxFast.Checked ? " -c:v copy -c:a copy " : "";
+            trimSS = chboxTrim.Checked ? $"-ss {mtxtTrim.Text}" : "";
+            trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text}" : "";
+
             //foreach (var ch in Controls.OfType<CheckBox>())
             foreach (var rb in Controls.OfType<RadioButton>())
                 if (rb.Checked)
@@ -74,8 +123,8 @@ namespace toMov
                             selectFile = $" \"{file}\" ";
                             outFile = $"{selectFile.Remove(selectFile.Length - 6)}{finalFormat}\"";
 
-                            finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + outFile;
-                            // MessageBox.Show(finalCommand); // testing final command
+                            finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + trimSS + trimTo + fast + outFile;
+                            //MessageBox.Show(finalCommand); // testing final command
                             // Converting
                             ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
                             procStartInfo.Arguments = finalCommand;
@@ -83,12 +132,11 @@ namespace toMov
 
                         }
 
-                    }   //  finalFormat = "." + rb.Text;
+                    }  
                 }
         }
 
-
-
-     
+       
     }
+    
 }
