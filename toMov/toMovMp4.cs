@@ -107,8 +107,7 @@ namespace toMov
             fast = chboxFast.Checked ? " -c:v copy -c:a copy " : "";
             trimSS = chboxTrim.Checked ? $"-ss {mtxtTrim.Text}" : "";
             trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text}" : "";
-            DateTime date = DateTime.Now;
-            CultureInfo ci = CultureInfo.InvariantCulture;
+            
 
             //foreach (var ch in Controls.OfType<CheckBox>())
             foreach (var rb in Controls.OfType<RadioButton>())
@@ -123,15 +122,17 @@ namespace toMov
                     {
                         foreach (string file in selectFileDialog.FileNames)
                         {
+                            DateTime date = DateTime.Now;
+                            CultureInfo ci = CultureInfo.InvariantCulture;
                             selectFile = $" \"{file}\" ";
                             outFile = $"{selectFile.Remove(selectFile.Length - 6)}{date.ToString("hh-mm-ss", ci)}{finalFormat}\"";
 
                             finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + trimSS + trimTo + fast + outFile;
-                            MessageBox.Show(finalCommand); // testing final command
+                            //MessageBox.Show(finalCommand); // testing final command
                             // Converting
-                            //ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
-                            //procStartInfo.Arguments = finalCommand;
-                            //Process.Start(procStartInfo);
+                            ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
+                            procStartInfo.Arguments = finalCommand;
+                            Process.Start(procStartInfo);
 
                         }
 
