@@ -105,37 +105,44 @@ namespace toMov
             removeSound = chboxSound.Checked ? " -an " : "";
             resize2 = chboxResize2.Checked ? @" -vf scale=""iw/2:ih/2"" " : "";
             fast = chboxFast.Checked ? " -c:v copy -c:a copy " : "";
-            trimSS = chboxTrim.Checked ? $"-ss {mtxtTrim.Text}" : "";
-            trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text}" : "";
+            trimSS = chboxTrim.Checked ? $"-ss {mtxtTrim.Text} " : "";
+            trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text} " : "";
             
 
             //foreach (var ch in Controls.OfType<CheckBox>())
             foreach (var rb in Controls.OfType<RadioButton>())
                 if (rb.Checked)
                 {
-                    finalFormat = rb.Text != "png" ? (finalFormat = "." + rb.Text) : (finalFormat = "-%03d." + rb.Text);
+                    finalFormat = rb.Text != "png" ? (finalFormat = "." + rb.Text) : (finalFormat = "%04d." + rb.Text);
                     // Configure open file dialog box
                     OpenFileDialog selectFileDialog = new OpenFileDialog();
                     selectFileDialog.Multiselect = true;
-                    selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm"; // Filter files by extension
+                    selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm,png)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm;*.png;"; // Filter files by extension
                     if (selectFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         foreach (string file in selectFileDialog.FileNames)
                         {
                             DateTime date = DateTime.Now;
                             CultureInfo ci = CultureInfo.InvariantCulture;
-                            selectFile = $" \"{file}\" ";
-                            outFile = $"{selectFile.Remove(selectFile.Length - 6)}{date.ToString("hh-mm-ss", ci)}{finalFormat}\"";
-
-                            finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + trimSS + trimTo + fast + outFile;
-                            //MessageBox.Show(finalCommand); // testing final command
+                            string fileName = Path.GetFileNameWithoutExtension(file).Replace(" ", "_");
+                            //MessageBox.Show(Path.GetExtension(file));
+                            selectFile = Path.GetExtension(file) != ".png" ? $" \"{Path.GetFileName(file)}\" " : $" {fileName.Remove(fileName.Length - 4, 4)}%04d.png ";
+                            outFile = $" {fileName}{date.ToString("mmss", ci)}{finalFormat}";                           
+                            finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + trimSS + trimTo + fast + "-pix_fmt yuv420p" + outFile;
+                 
+                           // MessageBox.Show(finalCommand); // testing final command
                             // Converting
                             ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
+                            procStartInfo.WorkingDirectory = Path.GetDirectoryName(file);
+                           // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //trying batch
                             procStartInfo.Arguments = finalCommand;
                             Process.Start(procStartInfo);
-
+                            if (Path.GetExtension(file) == ".png")
+                            {
+                                break; 
+                            }
                         }
-
+                       
                     }  
                 }
         }
