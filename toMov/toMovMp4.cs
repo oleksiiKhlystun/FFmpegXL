@@ -127,7 +127,7 @@ namespace toMov
                             string fileName = Path.GetFileNameWithoutExtension(file).Replace(" ", "_");
                             //MessageBox.Show(Path.GetExtension(file));
                             selectFile = Path.GetExtension(file) != ".png" ? $" \"{Path.GetFileName(file)}\" " : $" {fileName.Remove(fileName.Length - 4, 4)}%04d.png ";
-                            outFile = $" {fileName}{date.ToString("mmss", ci)}{finalFormat}";                           
+                            outFile = rb.Text != "png" ? $" {fileName}{date.ToString("mmss", ci)}{finalFormat}": $" {fileName}{finalFormat}";                           
                             finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + removeSound + trimSS + trimTo + fast + "-pix_fmt yuv420p" + outFile;
                  
                            // MessageBox.Show(finalCommand); // testing final command
