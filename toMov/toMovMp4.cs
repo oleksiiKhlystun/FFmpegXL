@@ -143,8 +143,8 @@ namespace toMov
             fast = chboxFast.Checked ? " -c:v copy -c:a copy " : "";
             trimSS = chboxTrim.Checked ? $"-ss {mtxtTrim.Text} " : "";
             trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text} " : "";
-            speedM2 = chboxSpeedM2.Checked ? " -vf \"setpts=0.5*PTS\" -af \"atempo = 2.0\" " : "";
-            speedD2 = chboxSpeedD2.Checked ? " -vf \"setpts=2.0*PTS\" -af \"atempo = 0.5\" " : "";
+            speedM2 = chboxSpeedM2.Checked ? " -filter_complex \"[0:v]setpts = 0.5 * PTS[v];[0:a]atempo = 2.0[a]\" -map \"[v]\" -map \"[a]\" " : "";
+            speedD2 = chboxSpeedD2.Checked ? " -filter_complex \"[0:v]setpts = 2.0 * PTS[v];[0:a]atempo = 0.5[a]\" -map \"[v]\" -map \"[a]\" " : "";
 
             //foreach (var ch in Controls.OfType<CheckBox>())
             foreach (var rb in Controls.OfType<RadioButton>())
