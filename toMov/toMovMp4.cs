@@ -27,6 +27,8 @@ namespace toMov
         private string fast;
         private string trimSS;
         private string trimTo;
+        private string togif;
+        private string yuv420p;
 
         public toMovMp4()
         {
@@ -44,7 +46,8 @@ namespace toMov
             CheckBox chboxFps = (CheckBox)sender;
             if (chboxFps.Checked)
             {
-                chboxFast.Checked = false;              
+                chboxFast.Checked = false;
+                radioBtn_gif.Checked = false;
             }
         }
        
@@ -59,6 +62,7 @@ namespace toMov
                 chboxFast.Checked = false;
                 chboxSpeedM2.Checked = false;
                 chboxSpeedD2.Checked = false;
+                radioBtn_gif.Checked = false;
             }
         }
         private void chboxSpeedM2_CheckedChanged(object sender, EventArgs e)
@@ -69,6 +73,7 @@ namespace toMov
                 chboxResize2.Checked = false;
                 chboxFast.Checked = false;
                 chboxSpeedD2.Checked = false;
+                radioBtn_gif.Checked = false;
             }
             //else if (chboxSpeedM2.Checked == false)
             //{
@@ -84,6 +89,7 @@ namespace toMov
                 chboxResize2.Checked = false;
                 chboxFast.Checked = false;
                 chboxSpeedM2.Checked = false;
+                radioBtn_gif.Checked = false;
             }
             //else if (chboxSpeedM2.Checked == false)
             //{
@@ -121,6 +127,7 @@ namespace toMov
                 chboxTrim.Checked = false;
                 chboxSpeedM2.Checked = false;
                 chboxSpeedD2.Checked = false;
+                radioBtn_gif.Checked = false;
 
             }
         }
@@ -128,13 +135,23 @@ namespace toMov
         private void radioBtn_mov_CheckedChanged(object sender, EventArgs e)
         {
         }
-        private void radioBtn_avi_CheckedChanged(object sender, EventArgs e)
-        {
-        }
+
         private void radioBtn_mp4_CheckedChanged(object sender, EventArgs e)
         {
         }
-
+        private void radioBtn_gif_CheckedChanged(object sender, EventArgs e)
+        {
+            RadioButton radioBtn_gif = (RadioButton)sender;
+            if (radioBtn_gif.Checked)
+            {
+                chboxResize2.Checked = false;
+                chboxFps.Checked = false;
+                chboxSound.Checked = false;
+                chboxSpeedM2.Checked = false;
+                chboxSpeedD2.Checked = false;
+                chboxFast.Checked = false;
+            }
+        }
         private void btnSelConvert_Click(object sender, EventArgs e)
         {
             outFps = chboxFps.Checked ? $" -r {upDownFps.Value} " : "";
@@ -145,12 +162,14 @@ namespace toMov
             trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text} " : "";
             speedM2 = chboxSpeedM2.Checked ? " -filter_complex \"[0:v]setpts = 0.5 * PTS[v];[0:a]atempo = 2.0[a]\" -map \"[v]\" -map \"[a]\" " : "";
             speedD2 = chboxSpeedD2.Checked ? " -filter_complex \"[0:v]setpts = 2.0 * PTS[v];[0:a]atempo = 0.5[a]\" -map \"[v]\" -map \"[a]\" " : "";
-
+            togif = radioBtn_gif.Checked ? " -vf \"fps=10,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" " : "" ; //gif
             //foreach (var ch in Controls.OfType<CheckBox>())
             foreach (var rb in Controls.OfType<RadioButton>())
                 if (rb.Checked)
                 {
                     finalFormat = rb.Text != "png" ? (finalFormat = "." + rb.Text) : (finalFormat = "%04d." + rb.Text);
+                    yuv420p = (rb.Text == "mp4")||(rb.Text == "mov") ? " -pix_fmt yuv420p " : "";
+                    
                     // Configure open file dialog box
                     OpenFileDialog selectFileDialog = new OpenFileDialog();
                     selectFileDialog.Multiselect = true;
@@ -165,8 +184,8 @@ namespace toMov
                             //MessageBox.Show(Path.GetExtension(file));
                             selectFile = Path.GetExtension(file) != ".png" ? $" \"{Path.GetFileName(file)}\" " : $" {fileName.Remove(fileName.Length - 4, 4)}%04d.png ";
                             outFile = rb.Text != "png" ? $" {fileName}{date.ToString("mmss", ci)}{finalFormat}": $" {fileName}{finalFormat}";                           
-                            finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + speedM2 + speedD2 + removeSound + trimSS + trimTo + fast + "-pix_fmt yuv420p" + outFile;
-                 
+                            finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + speedM2 + speedD2 + removeSound + trimSS + trimTo + fast + togif + yuv420p + outFile; //"-pix_fmt yuv420p"
+
                             //MessageBox.Show(finalCommand); // testing final command
                             // Converting
                             ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
@@ -184,7 +203,7 @@ namespace toMov
                 }
         }
 
-     
+    
     }
     
 }

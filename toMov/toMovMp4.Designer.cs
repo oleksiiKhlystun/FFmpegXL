@@ -32,7 +32,6 @@ namespace toMov
         {
             this.radioBtn_mov = new System.Windows.Forms.RadioButton();
             this.radioBtn_mp4 = new System.Windows.Forms.RadioButton();
-            this.radioBtn_mp3 = new System.Windows.Forms.RadioButton();
             this.chboxSound = new System.Windows.Forms.CheckBox();
             this.btnSelConvert = new System.Windows.Forms.Button();
             this.upDownFps = new System.Windows.Forms.NumericUpDown();
@@ -46,6 +45,7 @@ namespace toMov
             this.mtxtTo = new System.Windows.Forms.MaskedTextBox();
             this.chboxSpeedM2 = new System.Windows.Forms.CheckBox();
             this.chboxSpeedD2 = new System.Windows.Forms.CheckBox();
+            this.radioBtn_gif = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -74,18 +74,6 @@ namespace toMov
             this.radioBtn_mp4.Text = "mp4";
             this.radioBtn_mp4.UseVisualStyleBackColor = true;
             this.radioBtn_mp4.CheckedChanged += new System.EventHandler(this.radioBtn_mp4_CheckedChanged);
-            // 
-            // radioBtn_mp3
-            // 
-            this.radioBtn_mp3.AutoSize = true;
-            this.radioBtn_mp3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioBtn_mp3.Location = new System.Drawing.Point(19, 147);
-            this.radioBtn_mp3.Name = "radioBtn_mp3";
-            this.radioBtn_mp3.Size = new System.Drawing.Size(44, 21);
-            this.radioBtn_mp3.TabIndex = 2;
-            this.radioBtn_mp3.Text = "avi";
-            this.radioBtn_mp3.UseVisualStyleBackColor = true;
-            this.radioBtn_mp3.CheckedChanged += new System.EventHandler(this.radioBtn_avi_CheckedChanged);
             // 
             // chboxSound
             // 
@@ -240,11 +228,25 @@ namespace toMov
             this.chboxSpeedD2.UseVisualStyleBackColor = true;
             this.chboxSpeedD2.CheckedChanged += new System.EventHandler(this.chboxSpeedD2_CheckedChanged);
             // 
+            // radioBtn_gif
+            // 
+            this.radioBtn_gif.AutoSize = true;
+            this.radioBtn_gif.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.radioBtn_gif.Location = new System.Drawing.Point(19, 147);
+            this.radioBtn_gif.Name = "radioBtn_gif";
+            this.radioBtn_gif.Size = new System.Drawing.Size(40, 20);
+            this.radioBtn_gif.TabIndex = 23;
+            this.radioBtn_gif.TabStop = true;
+            this.radioBtn_gif.Text = "gif";
+            this.radioBtn_gif.UseVisualStyleBackColor = true;
+            this.radioBtn_gif.CheckedChanged += new System.EventHandler(this.radioBtn_gif_CheckedChanged);
+            // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(165, 286);
+            this.Controls.Add(this.radioBtn_gif);
             this.Controls.Add(this.chboxSpeedD2);
             this.Controls.Add(this.chboxSpeedM2);
             this.Controls.Add(this.mtxtTo);
@@ -258,7 +260,6 @@ namespace toMov
             this.Controls.Add(this.upDownFps);
             this.Controls.Add(this.btnSelConvert);
             this.Controls.Add(this.chboxSound);
-            this.Controls.Add(this.radioBtn_mp3);
             this.Controls.Add(this.radioBtn_mp4);
             this.Controls.Add(this.radioBtn_mov);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
@@ -275,7 +276,6 @@ namespace toMov
 
         private System.Windows.Forms.RadioButton radioBtn_mov;
         private System.Windows.Forms.RadioButton radioBtn_mp4;
-        private System.Windows.Forms.RadioButton radioBtn_mp3;
         private System.Windows.Forms.CheckBox chboxSound;
         private System.Windows.Forms.Button btnSelConvert;
         private System.Windows.Forms.NumericUpDown upDownFps;
@@ -289,6 +289,7 @@ namespace toMov
         private System.Windows.Forms.MaskedTextBox mtxtTo;
         private System.Windows.Forms.CheckBox chboxSpeedM2;
         private System.Windows.Forms.CheckBox chboxSpeedD2;
+        private System.Windows.Forms.RadioButton radioBtn_gif;
     }
 }
 
