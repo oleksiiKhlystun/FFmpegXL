@@ -39,13 +39,14 @@ namespace toMov
             this.chboxResize2 = new System.Windows.Forms.CheckBox();
             this.chboxFps = new System.Windows.Forms.CheckBox();
             this.chboxTrim = new System.Windows.Forms.CheckBox();
-            this.chboxFast = new System.Windows.Forms.CheckBox();
             this.chboxTo = new System.Windows.Forms.CheckBox();
             this.mtxtTrim = new System.Windows.Forms.MaskedTextBox();
             this.mtxtTo = new System.Windows.Forms.MaskedTextBox();
             this.chboxSpeedM2 = new System.Windows.Forms.CheckBox();
             this.chboxSpeedD2 = new System.Windows.Forms.CheckBox();
             this.radioBtn_gif = new System.Windows.Forms.RadioButton();
+            this.btnFastConvert = new System.Windows.Forms.Button();
+            this.labelCopy = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,7 +91,7 @@ namespace toMov
             // btnSelConvert
             // 
             this.btnSelConvert.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSelConvert.Location = new System.Drawing.Point(19, 250);
+            this.btnSelConvert.Location = new System.Drawing.Point(19, 223);
             this.btnSelConvert.Name = "btnSelConvert";
             this.btnSelConvert.Size = new System.Drawing.Size(129, 23);
             this.btnSelConvert.TabIndex = 5;
@@ -160,18 +161,6 @@ namespace toMov
             this.chboxTrim.UseVisualStyleBackColor = true;
             this.chboxTrim.CheckedChanged += new System.EventHandler(this.chboxTrim_CheckedChanged);
             // 
-            // chboxFast
-            // 
-            this.chboxFast.AutoSize = true;
-            this.chboxFast.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.chboxFast.Location = new System.Drawing.Point(19, 223);
-            this.chboxFast.Name = "chboxFast";
-            this.chboxFast.Size = new System.Drawing.Size(141, 21);
-            this.chboxFast.TabIndex = 14;
-            this.chboxFast.Text = "fast(copy params)";
-            this.chboxFast.UseVisualStyleBackColor = true;
-            this.chboxFast.CheckedChanged += new System.EventHandler(this.chboxFast_CheckedChanged);
-            // 
             // chboxTo
             // 
             this.chboxTo.AutoSize = true;
@@ -192,6 +181,7 @@ namespace toMov
             this.mtxtTrim.Name = "mtxtTrim";
             this.mtxtTrim.Size = new System.Drawing.Size(50, 20);
             this.mtxtTrim.TabIndex = 19;
+            this.mtxtTrim.Text = "000000";
             this.mtxtTrim.ValidatingType = typeof(System.DateTime);
             // 
             // mtxtTo
@@ -202,6 +192,7 @@ namespace toMov
             this.mtxtTo.Name = "mtxtTo";
             this.mtxtTo.Size = new System.Drawing.Size(50, 20);
             this.mtxtTo.TabIndex = 20;
+            this.mtxtTo.Text = "000000";
             this.mtxtTo.ValidatingType = typeof(System.DateTime);
             // 
             // chboxSpeedM2
@@ -241,18 +232,41 @@ namespace toMov
             this.radioBtn_gif.UseVisualStyleBackColor = true;
             this.radioBtn_gif.CheckedChanged += new System.EventHandler(this.radioBtn_gif_CheckedChanged);
             // 
+            // btnFastConvert
+            // 
+            this.btnFastConvert.BackColor = System.Drawing.SystemColors.Control;
+            this.btnFastConvert.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.btnFastConvert.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.btnFastConvert.Location = new System.Drawing.Point(19, 252);
+            this.btnFastConvert.Name = "btnFastConvert";
+            this.btnFastConvert.Size = new System.Drawing.Size(52, 23);
+            this.btnFastConvert.TabIndex = 24;
+            this.btnFastConvert.Text = "Fast";
+            this.btnFastConvert.UseVisualStyleBackColor = false;
+            this.btnFastConvert.Click += new System.EventHandler(this.btnFastConvert_Click);
+            // 
+            // labelCopy
+            // 
+            this.labelCopy.AutoSize = true;
+            this.labelCopy.Location = new System.Drawing.Point(77, 257);
+            this.labelCopy.Name = "labelCopy";
+            this.labelCopy.Size = new System.Drawing.Size(76, 13);
+            this.labelCopy.TabIndex = 25;
+            this.labelCopy.Text = "(copy param-s)";
+            // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(165, 286);
+            this.Controls.Add(this.labelCopy);
+            this.Controls.Add(this.btnFastConvert);
             this.Controls.Add(this.radioBtn_gif);
             this.Controls.Add(this.chboxSpeedD2);
             this.Controls.Add(this.chboxSpeedM2);
             this.Controls.Add(this.mtxtTo);
             this.Controls.Add(this.mtxtTrim);
             this.Controls.Add(this.chboxTo);
-            this.Controls.Add(this.chboxFast);
             this.Controls.Add(this.chboxTrim);
             this.Controls.Add(this.chboxFps);
             this.Controls.Add(this.chboxResize2);
@@ -283,13 +297,14 @@ namespace toMov
         private System.Windows.Forms.CheckBox chboxResize2;
         private System.Windows.Forms.CheckBox chboxFps;
         private System.Windows.Forms.CheckBox chboxTrim;
-        private System.Windows.Forms.CheckBox chboxFast;
         private System.Windows.Forms.CheckBox chboxTo;
         private System.Windows.Forms.MaskedTextBox mtxtTrim;
         private System.Windows.Forms.MaskedTextBox mtxtTo;
         private System.Windows.Forms.CheckBox chboxSpeedM2;
         private System.Windows.Forms.CheckBox chboxSpeedD2;
         private System.Windows.Forms.RadioButton radioBtn_gif;
+        private System.Windows.Forms.Button btnFastConvert;
+        private System.Windows.Forms.Label labelCopy;
     }
 }
 

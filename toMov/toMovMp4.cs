@@ -17,19 +17,15 @@ namespace toMov
         //ffmpeg -i test.avi testConvert.mov.
         private string finalFormat;
         private string removeSound;
-        private string resize2;
-        private string speedM2;
-        private string speedD2;
         private string selectFile;
         private string outFile;
         private string outFps;
         private string finalCommand;
-        private string fast;
         private string trimSS;
         private string trimTo;
-        private string togif;
         private string yuv420p;
-
+        private string finscale;
+        private string finspeed;
         public toMovMp4()
         {
             InitializeComponent();
@@ -43,93 +39,42 @@ namespace toMov
         }
         private void chboxFps_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox chboxFps = (CheckBox)sender;
-            if (chboxFps.Checked)
-            {
-                chboxFast.Checked = false;
-                radioBtn_gif.Checked = false;
-            }
+
         }
-       
+    
         private void chboxSound_CheckedChanged(object sender, EventArgs e)
         {
         }
         private void chboxResize2_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox chboxResize2 = (CheckBox)sender;
-            if (chboxResize2.Checked)
-            {
-                chboxFast.Checked = false;
-                chboxSpeedM2.Checked = false;
-                chboxSpeedD2.Checked = false;
-                radioBtn_gif.Checked = false;
-            }
-        }
+         }
         private void chboxSpeedM2_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox chboxSpeedM2 = (CheckBox)sender;
             if (chboxSpeedM2.Checked)
             {
-                chboxResize2.Checked = false;
-                chboxFast.Checked = false;
+                //chboxResize2.Checked = false;
+                
                 chboxSpeedD2.Checked = false;
-                radioBtn_gif.Checked = false;
+                //radioBtn_gif.Checked = false;
             }
-            //else if (chboxSpeedM2.Checked == false)
-            //{
-            //    chboxSpeedD2.Checked = false;
-            //}
+       
         }
 
         private void chboxSpeedD2_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox chboxSpeedD2 = (CheckBox)sender;
             if (chboxSpeedD2.Checked)
-            {
-                chboxResize2.Checked = false;
-                chboxFast.Checked = false;
+            {    
                 chboxSpeedM2.Checked = false;
-                radioBtn_gif.Checked = false;
             }
-            //else if (chboxSpeedM2.Checked == false)
-            //{
-            //    chboxSpeedM2.Checked = false;
-            //}
+   
         }
         private void chboxTrim_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox chboxTrim = (CheckBox)sender;
-            if (chboxTrim.Checked)
-            {
-                chboxFast.Checked = false;
-            }
-            else if(chboxTrim.Checked == false)
-            {
-                chboxTo.Checked = false;
-            }
-        }
+         }
         private void chboxTo_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBox chboxTo = (CheckBox)sender;
-            if (chboxTo.Checked)
-            {
-
-                chboxFast.Checked = false;
-            }
-        }
-        private void chboxFast_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBox chboxFast = (CheckBox)sender;
-            if (chboxFast.Checked)
-            {
-                chboxResize2.Checked = false;
-                chboxFps.Checked = false;
-                chboxTrim.Checked = false;
-                chboxSpeedM2.Checked = false;
-                chboxSpeedD2.Checked = false;
-                radioBtn_gif.Checked = false;
-
-            }
+        {    
         }
 
         private void radioBtn_mov_CheckedChanged(object sender, EventArgs e)
@@ -145,24 +90,23 @@ namespace toMov
             if (radioBtn_gif.Checked)
             {
                 chboxResize2.Checked = false;
-                chboxFps.Checked = false;
-                chboxSound.Checked = false;
-                chboxSpeedM2.Checked = false;
-                chboxSpeedD2.Checked = false;
-                chboxFast.Checked = false;
+               
             }
         }
         private void btnSelConvert_Click(object sender, EventArgs e)
         {
-            outFps = chboxFps.Checked ? $" -r {upDownFps.Value} " : "";
+            outFps = chboxFps.Checked ? $"fps={upDownFps.Value}," : "";
             removeSound = chboxSound.Checked ? " -an " : "";
-            resize2 = chboxResize2.Checked ? " -vf scale=iw/2:-1 " : "";
-            fast = chboxFast.Checked ? " -c:v copy -c:a copy " : "";
-            trimSS = chboxTrim.Checked ? $"-ss {mtxtTrim.Text} " : "";
+            trimSS = chboxTrim.Checked ? $" -ss {mtxtTrim.Text} " : "";
             trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text} " : "";
-            speedM2 = chboxSpeedM2.Checked ? " -filter_complex \"[0:v]setpts = 0.5 * PTS[v];[0:a]atempo = 2.0[a]\" -map \"[v]\" -map \"[a]\" " : "";
-            speedD2 = chboxSpeedD2.Checked ? " -filter_complex \"[0:v]setpts = 2.0 * PTS[v];[0:a]atempo = 0.5[a]\" -map \"[v]\" -map \"[a]\" " : "";
-            togif = radioBtn_gif.Checked ? " -vf \"fps=10,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse\" " : "" ; //gif
+            if (chboxResize2.Checked){ finscale = "scale=trunc(iw/4)*2:trunc(ih/4)*2"; }
+            else if (radioBtn_gif.Checked) { finscale = "scale = 480:-1:flags = lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"; }
+            else { finscale = "scale = trunc(iw / 2) * 2:trunc(ih / 2) * 2"; }
+
+            if (chboxSpeedM2.Checked) { finspeed = "setpts = 0.5 * PTS"; }
+            else if (chboxSpeedD2.Checked) { finspeed = "setpts = 2.0 * PTS"; }
+            else { finspeed = "setpts = 1.0 * PTS"; }
+
             //foreach (var ch in Controls.OfType<CheckBox>())
             foreach (var rb in Controls.OfType<RadioButton>())
                 if (rb.Checked)
@@ -184,7 +128,7 @@ namespace toMov
                             //MessageBox.Show(Path.GetExtension(file));
                             selectFile = Path.GetExtension(file) != ".png" ? $" \"{Path.GetFileName(file)}\" " : $" {fileName.Remove(fileName.Length - 4, 4)}%04d.png ";
                             outFile = rb.Text != "png" ? $" {fileName}{date.ToString("mmss", ci)}{finalFormat}": $" {fileName}{finalFormat}";                           
-                            finalCommand = "/c ffmpeg -i" + selectFile + outFps + resize2 + speedM2 + speedD2 + removeSound + trimSS + trimTo + fast + togif + yuv420p + outFile; //"-pix_fmt yuv420p"
+                            finalCommand = "/c ffmpeg -i" + selectFile + removeSound  + trimSS + trimTo + $" -vf \"{outFps}{finscale},{finspeed}\" " + yuv420p + outFile; // + togif  + speedM2 + speedD2 + resize2+ outFps"-pix_fmt yuv420p"
 
                             //MessageBox.Show(finalCommand); // testing final command
                             // Converting
@@ -203,7 +147,35 @@ namespace toMov
                 }
         }
 
-    
+        private void btnFastConvert_Click(object sender, EventArgs e)
+        {
+            foreach (var rb in Controls.OfType<RadioButton>())
+                if (rb.Checked)
+                {
+                
+                    OpenFileDialog selectFileDialog2 = new OpenFileDialog();
+                    selectFileDialog2.Multiselect = true;
+                    selectFileDialog2.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm;"; // Filter files by extension
+                    if (selectFileDialog2.ShowDialog() == DialogResult.OK)
+                    {
+                        foreach (string file in selectFileDialog2.FileNames)
+                        {
+                            DateTime date = DateTime.Now;
+                            CultureInfo ci = CultureInfo.InvariantCulture;
+                            string fileName = Path.GetFileNameWithoutExtension(file).Replace(" ", "_");
+                            finalCommand = $"/c ffmpeg -i \"{Path.GetFileName(file)}\" -c:v copy -c:a copy {fileName}2.{rb.Text}";
+                            
+                            //MessageBox.Show(finalCommand); // testing final command
+                            ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
+                            procStartInfo.WorkingDirectory = Path.GetDirectoryName(file);
+                            // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //trying batch
+                            procStartInfo.Arguments = finalCommand;
+                            Process.Start(procStartInfo);
+
+                        }
+                    }
+                }
+        }
     }
     
 }
