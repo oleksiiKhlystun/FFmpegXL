@@ -47,7 +47,13 @@ namespace toMov
         }
         private void chboxResize2_CheckedChanged(object sender, EventArgs e)
         {
-         }
+            CheckBox chboxResize2 = (CheckBox)sender;
+            if (chboxResize2.Checked)
+            {
+                chboxSpeedM2.Checked = false;
+                radioBtn_gif.Checked = false;
+            }
+        }
         private void chboxSpeedM2_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox chboxSpeedM2 = (CheckBox)sender;
@@ -56,7 +62,7 @@ namespace toMov
                 //chboxResize2.Checked = false;
                 
                 chboxSpeedD2.Checked = false;
-                //radioBtn_gif.Checked = false;
+                //
             }
        
         }
