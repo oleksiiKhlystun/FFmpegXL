@@ -30,6 +30,7 @@ namespace toMov
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.radioBtn_mov = new System.Windows.Forms.RadioButton();
             this.radioBtn_mp4 = new System.Windows.Forms.RadioButton();
             this.chboxSound = new System.Windows.Forms.CheckBox();
@@ -47,6 +48,11 @@ namespace toMov
             this.radioBtn_gif = new System.Windows.Forms.RadioButton();
             this.btnFastConvert = new System.Windows.Forms.Button();
             this.labelCopy = new System.Windows.Forms.Label();
+            this.btnRename = new System.Windows.Forms.Button();
+            this.toolTipRename = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTipFast = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTipSelect = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTipGif = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,7 +101,8 @@ namespace toMov
             this.btnSelConvert.Name = "btnSelConvert";
             this.btnSelConvert.Size = new System.Drawing.Size(129, 23);
             this.btnSelConvert.TabIndex = 5;
-            this.btnSelConvert.Text = "Select_Convert";
+            this.btnSelConvert.Text = "Select Convert";
+            this.toolTipSelect.SetToolTip(this.btnSelConvert, "You can select multiple files");
             this.btnSelConvert.UseVisualStyleBackColor = true;
             this.btnSelConvert.Click += new System.EventHandler(this.btnSelConvert_Click);
             // 
@@ -211,6 +218,7 @@ namespace toMov
             // 
             this.chboxSpeedD2.AutoSize = true;
             this.chboxSpeedD2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.chboxSpeedD2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.chboxSpeedD2.Location = new System.Drawing.Point(114, 97);
             this.chboxSpeedD2.Name = "chboxSpeedD2";
             this.chboxSpeedD2.Size = new System.Drawing.Size(39, 21);
@@ -229,6 +237,7 @@ namespace toMov
             this.radioBtn_gif.TabIndex = 23;
             this.radioBtn_gif.TabStop = true;
             this.radioBtn_gif.Text = "gif";
+            this.toolTipGif.SetToolTip(this.radioBtn_gif, "scale weight 360:-1");
             this.radioBtn_gif.UseVisualStyleBackColor = true;
             this.radioBtn_gif.CheckedChanged += new System.EventHandler(this.radioBtn_gif_CheckedChanged);
             // 
@@ -242,23 +251,36 @@ namespace toMov
             this.btnFastConvert.Size = new System.Drawing.Size(52, 23);
             this.btnFastConvert.TabIndex = 24;
             this.btnFastConvert.Text = "Fast";
+            this.toolTipFast.SetToolTip(this.btnFastConvert, "Copy all parameters(any chkbox not working)");
             this.btnFastConvert.UseVisualStyleBackColor = false;
             this.btnFastConvert.Click += new System.EventHandler(this.btnFastConvert_Click);
             // 
             // labelCopy
             // 
             this.labelCopy.AutoSize = true;
-            this.labelCopy.Location = new System.Drawing.Point(77, 257);
+            this.labelCopy.Location = new System.Drawing.Point(72, 257);
             this.labelCopy.Name = "labelCopy";
             this.labelCopy.Size = new System.Drawing.Size(76, 13);
             this.labelCopy.TabIndex = 25;
             this.labelCopy.Text = "(copy param-s)";
+            // 
+            // btnRename
+            // 
+            this.btnRename.Location = new System.Drawing.Point(131, 147);
+            this.btnRename.Name = "btnRename";
+            this.btnRename.Size = new System.Drawing.Size(17, 20);
+            this.btnRename.TabIndex = 26;
+            this.btnRename.Text = "r";
+            this.toolTipRename.SetToolTip(this.btnRename, "Rename selected png to 0001,0002");
+            this.btnRename.UseVisualStyleBackColor = true;
+            this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
             // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(165, 286);
+            this.Controls.Add(this.btnRename);
             this.Controls.Add(this.labelCopy);
             this.Controls.Add(this.btnFastConvert);
             this.Controls.Add(this.radioBtn_gif);
@@ -305,6 +327,11 @@ namespace toMov
         private System.Windows.Forms.RadioButton radioBtn_gif;
         private System.Windows.Forms.Button btnFastConvert;
         private System.Windows.Forms.Label labelCopy;
+        private System.Windows.Forms.Button btnRename;
+        private System.Windows.Forms.ToolTip toolTipRename;
+        private System.Windows.Forms.ToolTip toolTipFast;
+        private System.Windows.Forms.ToolTip toolTipSelect;
+        private System.Windows.Forms.ToolTip toolTipGif;
     }
 }
 

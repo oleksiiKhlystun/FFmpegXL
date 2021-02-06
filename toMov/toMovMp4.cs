@@ -50,7 +50,6 @@ namespace toMov
             CheckBox chboxResize2 = (CheckBox)sender;
             if (chboxResize2.Checked)
             {
-                chboxSpeedM2.Checked = false;
                 radioBtn_gif.Checked = false;
             }
         }
@@ -59,10 +58,8 @@ namespace toMov
             CheckBox chboxSpeedM2 = (CheckBox)sender;
             if (chboxSpeedM2.Checked)
             {
-                //chboxResize2.Checked = false;
-                
+                chboxSound.Checked = true;                
                 chboxSpeedD2.Checked = false;
-                //
             }
        
         }
@@ -71,7 +68,8 @@ namespace toMov
         {
             CheckBox chboxSpeedD2 = (CheckBox)sender;
             if (chboxSpeedD2.Checked)
-            {    
+            {
+                chboxSound.Checked = true;
                 chboxSpeedM2.Checked = false;
             }
    
@@ -95,8 +93,7 @@ namespace toMov
             RadioButton radioBtn_gif = (RadioButton)sender;
             if (radioBtn_gif.Checked)
             {
-                chboxResize2.Checked = false;
-               
+                chboxResize2.Checked = false;               
             }
         }
         private void btnSelConvert_Click(object sender, EventArgs e)
@@ -106,8 +103,8 @@ namespace toMov
             trimSS = chboxTrim.Checked ? $" -ss {mtxtTrim.Text} " : "";
             trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text} " : "";
             if (chboxResize2.Checked){ finscale = "scale=trunc(iw/4)*2:trunc(ih/4)*2"; }
-            else if (radioBtn_gif.Checked) { finscale = "scale = 480:-1:flags = lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"; }
-            else { finscale = "scale = trunc(iw / 2) * 2:trunc(ih / 2) * 2"; }
+            else if (radioBtn_gif.Checked) { finscale = "scale = 360:-1:flags = lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"; }
+            else { finscale = "scale = trunc(iw/2)*2:trunc(ih/2)*2"; }
 
             if (chboxSpeedM2.Checked) { finspeed = "setpts = 0.5 * PTS"; }
             else if (chboxSpeedD2.Checked) { finspeed = "setpts = 2.0 * PTS"; }
@@ -140,9 +137,10 @@ namespace toMov
                             // Converting
                             ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
                             procStartInfo.WorkingDirectory = Path.GetDirectoryName(file);
-                            // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //trying batch
+                            // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //this batch not needed
                             procStartInfo.Arguments = finalCommand;
-                            Process.Start(procStartInfo);
+                            var process = Process.Start(procStartInfo);
+                            process.WaitForExit();//Instructs the Process component to wait indefinitely for the associated process to exit.
                             if (Path.GetExtension(file) == ".png")
                             {
                                 break;
@@ -155,7 +153,7 @@ namespace toMov
 
         private void btnFastConvert_Click(object sender, EventArgs e)
         {
-            foreach (var rb in Controls.OfType<RadioButton>())
+             foreach (var rb in Controls.OfType<RadioButton>())
                 if (rb.Checked)
                 {
                 
@@ -176,12 +174,44 @@ namespace toMov
                             procStartInfo.WorkingDirectory = Path.GetDirectoryName(file);
                             // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //trying batch
                             procStartInfo.Arguments = finalCommand;
-                            Process.Start(procStartInfo);
-
+                            var process = Process.Start(procStartInfo);
+                            process.WaitForExit();//Instructs the Process component to wait indefinitely for the associated process to exit.
                         }
                     }
                 }
         }
+
+        private void btnRename_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog selectFileDialog3 = new OpenFileDialog();
+           // selectFileDialog3.Title = "Copy file parametres";
+            selectFileDialog3.Multiselect = true;
+            selectFileDialog3.Filter = "png|*.png;"; // Filter files by extension
+            if (selectFileDialog3.ShowDialog() == DialogResult.OK)
+            {
+                int i = 0;
+                foreach (string file in selectFileDialog3.FileNames)
+                {
+                    i++;
+                    string fileName =  Path.GetFileNameWithoutExtension(file).Remove(Path.GetFileNameWithoutExtension(file).Length - 4, 4)   + i.ToString("0000") +".png";
+                    string renameCommand = $"/c ren {Path.GetFileName(file)} {fileName}";
+
+                    //MessageBox.Show(renameCommand); // testing final command
+                    ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
+                    procStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    procStartInfo.WorkingDirectory = Path.GetDirectoryName(file);
+                    // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //trying batch
+                    procStartInfo.Arguments = renameCommand;
+                    var process = Process.Start(procStartInfo);
+                    process.WaitForExit(); //Instructs the Process component to wait indefinitely for the associated process to exit.
+
+                }
+                MessageBox.Show("rename success!");
+            }
+            
+        }
+
+
     }
     
 }
