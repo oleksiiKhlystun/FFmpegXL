@@ -271,7 +271,7 @@ namespace toMov
             this.btnRename.Size = new System.Drawing.Size(17, 20);
             this.btnRename.TabIndex = 26;
             this.btnRename.Text = "r";
-            this.toolTipRename.SetToolTip(this.btnRename, "Rename selected png to 0001,0002");
+            this.toolTipRename.SetToolTip(this.btnRename, "Rename selected png to 0001,0002...Need if convert from png");
             this.btnRename.UseVisualStyleBackColor = true;
             this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
             // 
