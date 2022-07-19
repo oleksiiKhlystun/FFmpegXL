@@ -237,7 +237,7 @@ namespace toMov
             this.radioBtn_gif.TabIndex = 23;
             this.radioBtn_gif.TabStop = true;
             this.radioBtn_gif.Text = "gif";
-            this.toolTipGif.SetToolTip(this.radioBtn_gif, "scale weight 360:-1");
+            this.toolTipGif.SetToolTip(this.radioBtn_gif, "scale weight 640:-1");
             this.radioBtn_gif.UseVisualStyleBackColor = true;
             this.radioBtn_gif.CheckedChanged += new System.EventHandler(this.radioBtn_gif_CheckedChanged);
             // 
