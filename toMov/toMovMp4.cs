@@ -103,7 +103,7 @@ namespace toMov
             trimSS = chboxTrim.Checked ? $" -ss {mtxtTrim.Text} " : "";
             trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text} " : "";
             if (chboxResize2.Checked){ finscale = "scale=trunc(iw/4)*2:trunc(ih/4)*2"; }
-            else if (radioBtn_gif.Checked) { finscale = "scale = 360:-1:flags = lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"; }
+            else if (radioBtn_gif.Checked) { finscale = "scale = 640:-1:flags = lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"; }
             else { finscale = "scale = trunc(iw/2)*2:trunc(ih/2)*2"; }
 
             if (chboxSpeedM2.Checked) { finspeed = "setpts = 0.5 * PTS"; }
