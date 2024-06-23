@@ -16,7 +16,8 @@ namespace toMov
         //Если находишься не в родной директории, то нужно полностью прописать путь в кавычках
         //ffmpeg -i test.avi testConvert.mov.
         private string finalFormat;
-        private string removeSound;
+        private string soundOff;
+        private string sound64k;
         private string selectFile;
         private string outFile;
         private string outFps;
@@ -26,6 +27,7 @@ namespace toMov
         private string yuv420p;
         private string finscale;
         private string finspeed;
+        private string atempo;
         public toMovMp4()
         {
             InitializeComponent();
@@ -44,7 +46,12 @@ namespace toMov
     
         private void chboxSound_CheckedChanged(object sender, EventArgs e)
         {
+            if (chboxSoundOff.Checked)
+            {
+                chboxSound64k.Checked = false;
+            }
         }
+
         private void chboxResize2_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox chboxResize2 = (CheckBox)sender;
@@ -58,7 +65,7 @@ namespace toMov
             CheckBox chboxSpeedM2 = (CheckBox)sender;
             if (chboxSpeedM2.Checked)
             {
-                chboxSound.Checked = true;                
+                //chboxSoundOff.Checked = true;                
                 chboxSpeedD2.Checked = false;
             }
        
@@ -69,7 +76,7 @@ namespace toMov
             CheckBox chboxSpeedD2 = (CheckBox)sender;
             if (chboxSpeedD2.Checked)
             {
-                chboxSound.Checked = true;
+                //chboxSoundOff.Checked = true;
                 chboxSpeedM2.Checked = false;
             }
    
@@ -99,16 +106,17 @@ namespace toMov
         private void btnSelConvert_Click(object sender, EventArgs e)
         {
             outFps = chboxFps.Checked ? $"fps={upDownFps.Value}," : "";
-            removeSound = chboxSound.Checked ? " -an " : "";
+            soundOff = chboxSoundOff.Checked ? " -an " : "";
+            sound64k = chboxSound64k.Checked ? " -b:a 64k " : "";
             trimSS = chboxTrim.Checked ? $" -ss {mtxtTrim.Text} " : "";
             trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text} " : "";
             if (chboxResize2.Checked){ finscale = "scale=trunc(iw/4)*2:trunc(ih/4)*2"; }
             else if (radioBtn_gif.Checked) { finscale = "scale = 640:-1:flags = lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"; }
             else { finscale = "scale = trunc(iw/2)*2:trunc(ih/2)*2"; }
 
-            if (chboxSpeedM2.Checked) { finspeed = "setpts = 0.5 * PTS"; }
-            else if (chboxSpeedD2.Checked) { finspeed = "setpts = 2.0 * PTS"; }
-            else { finspeed = "setpts = 1.0 * PTS"; }
+            if (chboxSpeedM2.Checked) { finspeed = "setpts = 0.5 * PTS"; atempo = "atempo=2.0"; }
+            else if (chboxSpeedD2.Checked) { finspeed = "setpts = 2.0 * PTS"; atempo = "atempo=0.5"; }
+            else { finspeed = "setpts = 1.0 * PTS"; atempo = "atempo=1.0"; }
 
             //foreach (var ch in Controls.OfType<CheckBox>())
             foreach (var rb in Controls.OfType<RadioButton>())
@@ -131,8 +139,8 @@ namespace toMov
                             //MessageBox.Show(Path.GetExtension(file));
                             selectFile = Path.GetExtension(file) != ".png" ? $" \"{Path.GetFileName(file)}\" " : $" {fileName.Remove(fileName.Length - 4, 4)}%04d.png ";
                             outFile = rb.Text != "png" ? $" {fileName}{date.ToString("mmss", ci)}{finalFormat}": $" {fileName}{finalFormat}";                           
-                            finalCommand = "/c ffmpeg -i" + selectFile + removeSound  + trimSS + trimTo + $" -vf \"{outFps}{finscale},{finspeed}\" " + yuv420p + outFile; // + togif  + speedM2 + speedD2 + resize2+ outFps"-pix_fmt yuv420p"
-
+                            //finalCommand = "/c ffmpeg -i" +selectFile + soundOff + trimSS + trimTo + $" -vf \"[0:v]{outFps}{finscale},{finspeed}[v];[0:a]{atempo}[a]\" " + sound64k + yuv420p + outFile; // + togif  + speedM2 + speedD2 + resize2+ outFps"-pix_fmt yuv420p"
+                            finalCommand = $"/c ffmpeg -i {selectFile} {soundOff} {trimSS} {trimTo} -filter_complex \"[0:v]{outFps}{finscale},{finspeed}[v];[0:a]{atempo}[a]\" -map \"[v]\" -map \"[a]\" {sound64k} {yuv420p} {outFile}";
                             //MessageBox.Show(finalCommand); // testing final command
                             // Converting
                             ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");

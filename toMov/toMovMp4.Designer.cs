@@ -33,7 +33,7 @@ namespace toMov
             this.components = new System.ComponentModel.Container();
             this.radioBtn_mov = new System.Windows.Forms.RadioButton();
             this.radioBtn_mp4 = new System.Windows.Forms.RadioButton();
-            this.chboxSound = new System.Windows.Forms.CheckBox();
+            this.chboxSoundOff = new System.Windows.Forms.CheckBox();
             this.btnSelConvert = new System.Windows.Forms.Button();
             this.upDownFps = new System.Windows.Forms.NumericUpDown();
             this.radioBtn_png = new System.Windows.Forms.RadioButton();
@@ -53,6 +53,8 @@ namespace toMov
             this.toolTipFast = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipSelect = new System.Windows.Forms.ToolTip(this.components);
             this.toolTipGif = new System.Windows.Forms.ToolTip(this.components);
+            this.chboxSound64k = new System.Windows.Forms.CheckBox();
+            this.LblSound = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -82,17 +84,17 @@ namespace toMov
             this.radioBtn_mp4.UseVisualStyleBackColor = true;
             this.radioBtn_mp4.CheckedChanged += new System.EventHandler(this.radioBtn_mp4_CheckedChanged);
             // 
-            // chboxSound
+            // chboxSoundOff
             // 
-            this.chboxSound.AutoSize = true;
-            this.chboxSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.chboxSound.Location = new System.Drawing.Point(19, 42);
-            this.chboxSound.Name = "chboxSound";
-            this.chboxSound.Size = new System.Drawing.Size(117, 21);
-            this.chboxSound.TabIndex = 4;
-            this.chboxSound.Text = "remove sound";
-            this.chboxSound.UseVisualStyleBackColor = true;
-            this.chboxSound.CheckedChanged += new System.EventHandler(this.chboxSound_CheckedChanged);
+            this.chboxSoundOff.AutoSize = true;
+            this.chboxSoundOff.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.chboxSoundOff.Location = new System.Drawing.Point(65, 43);
+            this.chboxSoundOff.Name = "chboxSoundOff";
+            this.chboxSoundOff.Size = new System.Drawing.Size(43, 21);
+            this.chboxSoundOff.TabIndex = 4;
+            this.chboxSoundOff.Text = "off";
+            this.chboxSoundOff.UseVisualStyleBackColor = true;
+            this.chboxSoundOff.CheckedChanged += new System.EventHandler(this.chboxSound_CheckedChanged);
             // 
             // btnSelConvert
             // 
@@ -275,11 +277,34 @@ namespace toMov
             this.btnRename.UseVisualStyleBackColor = true;
             this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
             // 
+            // chboxSound64k
+            // 
+            this.chboxSound64k.AutoSize = true;
+            this.chboxSound64k.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.chboxSound64k.Location = new System.Drawing.Point(103, 43);
+            this.chboxSound64k.Name = "chboxSound64k";
+            this.chboxSound64k.Size = new System.Drawing.Size(50, 21);
+            this.chboxSound64k.TabIndex = 4;
+            this.chboxSound64k.Text = "64k";
+            this.chboxSound64k.UseVisualStyleBackColor = true;
+            this.chboxSound64k.CheckedChanged += new System.EventHandler(this.chboxSound_CheckedChanged);
+            // 
+            // LblSound
+            // 
+            this.LblSound.AutoSize = true;
+            this.LblSound.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.LblSound.Location = new System.Drawing.Point(16, 44);
+            this.LblSound.Name = "LblSound";
+            this.LblSound.Size = new System.Drawing.Size(49, 17);
+            this.LblSound.TabIndex = 27;
+            this.LblSound.Text = "Sound";
+            // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(165, 286);
+            this.Controls.Add(this.LblSound);
             this.Controls.Add(this.btnRename);
             this.Controls.Add(this.labelCopy);
             this.Controls.Add(this.btnFastConvert);
@@ -295,7 +320,8 @@ namespace toMov
             this.Controls.Add(this.radioBtn_png);
             this.Controls.Add(this.upDownFps);
             this.Controls.Add(this.btnSelConvert);
-            this.Controls.Add(this.chboxSound);
+            this.Controls.Add(this.chboxSound64k);
+            this.Controls.Add(this.chboxSoundOff);
             this.Controls.Add(this.radioBtn_mp4);
             this.Controls.Add(this.radioBtn_mov);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
@@ -312,7 +338,7 @@ namespace toMov
 
         private System.Windows.Forms.RadioButton radioBtn_mov;
         private System.Windows.Forms.RadioButton radioBtn_mp4;
-        private System.Windows.Forms.CheckBox chboxSound;
+        private System.Windows.Forms.CheckBox chboxSoundOff;
         private System.Windows.Forms.Button btnSelConvert;
         private System.Windows.Forms.NumericUpDown upDownFps;
         private System.Windows.Forms.RadioButton radioBtn_png;
@@ -332,6 +358,8 @@ namespace toMov
         private System.Windows.Forms.ToolTip toolTipFast;
         private System.Windows.Forms.ToolTip toolTipSelect;
         private System.Windows.Forms.ToolTip toolTipGif;
+        private System.Windows.Forms.CheckBox chboxSound64k;
+        private System.Windows.Forms.Label LblSound;
     }
 }
 
