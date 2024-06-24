@@ -55,6 +55,7 @@ namespace toMov
             this.toolTipGif = new System.Windows.Forms.ToolTip(this.components);
             this.chboxSound64k = new System.Windows.Forms.CheckBox();
             this.LblSound = new System.Windows.Forms.Label();
+            this.btnRenameLast4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -76,7 +77,7 @@ namespace toMov
             // 
             this.radioBtn_mp4.AutoSize = true;
             this.radioBtn_mp4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioBtn_mp4.Location = new System.Drawing.Point(88, 124);
+            this.radioBtn_mp4.Location = new System.Drawing.Point(77, 124);
             this.radioBtn_mp4.Name = "radioBtn_mp4";
             this.radioBtn_mp4.Size = new System.Drawing.Size(53, 21);
             this.radioBtn_mp4.TabIndex = 1;
@@ -126,7 +127,7 @@ namespace toMov
             // 
             this.radioBtn_png.AutoSize = true;
             this.radioBtn_png.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.radioBtn_png.Location = new System.Drawing.Point(88, 147);
+            this.radioBtn_png.Location = new System.Drawing.Point(77, 147);
             this.radioBtn_png.Name = "radioBtn_png";
             this.radioBtn_png.Size = new System.Drawing.Size(49, 20);
             this.radioBtn_png.TabIndex = 9;
@@ -268,7 +269,7 @@ namespace toMov
             // 
             // btnRename
             // 
-            this.btnRename.Location = new System.Drawing.Point(131, 147);
+            this.btnRename.Location = new System.Drawing.Point(131, 146);
             this.btnRename.Name = "btnRename";
             this.btnRename.Size = new System.Drawing.Size(17, 20);
             this.btnRename.TabIndex = 26;
@@ -299,11 +300,23 @@ namespace toMov
             this.LblSound.TabIndex = 27;
             this.LblSound.Text = "Sound";
             // 
+            // btnRenameLast4
+            // 
+            this.btnRenameLast4.Location = new System.Drawing.Point(131, 125);
+            this.btnRenameLast4.Name = "btnRenameLast4";
+            this.btnRenameLast4.Size = new System.Drawing.Size(17, 23);
+            this.btnRenameLast4.TabIndex = 28;
+            this.btnRenameLast4.Text = "r";
+            this.toolTipRename.SetToolTip(this.btnRenameLast4, "Rename - delete last 4 symbols (file6953->file).");
+            this.btnRenameLast4.UseVisualStyleBackColor = true;
+            this.btnRenameLast4.Click += new System.EventHandler(this.btnRenameLast4_Click);
+            // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(165, 286);
+            this.Controls.Add(this.btnRenameLast4);
             this.Controls.Add(this.LblSound);
             this.Controls.Add(this.btnRename);
             this.Controls.Add(this.labelCopy);
@@ -360,6 +373,7 @@ namespace toMov
         private System.Windows.Forms.ToolTip toolTipGif;
         private System.Windows.Forms.CheckBox chboxSound64k;
         private System.Windows.Forms.Label LblSound;
+        private System.Windows.Forms.Button btnRenameLast4;
     }
 }
 

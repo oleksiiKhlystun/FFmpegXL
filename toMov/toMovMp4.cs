@@ -215,11 +215,50 @@ namespace toMov
 
                 }
                 MessageBox.Show("rename success!");
-            }
-            
+            }  
         }
 
+        private void btnRenameLast4_Click(object sender, EventArgs e)
+        {
+            // Открытие диалога для выбора файлов
+            OpenFileDialog selectFileDialog = new OpenFileDialog
+            {
+                Multiselect = true,
+                Filter = "All files|*.*" // Позволяет выбирать все файлы
+            };
 
+            if (selectFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string file in selectFileDialog.FileNames)
+                {
+                    string directory = Path.GetDirectoryName(file);
+                    string fileName = Path.GetFileNameWithoutExtension(file);
+                    string extension = Path.GetExtension(file);
+
+                    // Проверка, что длина имени файла больше 4 символов
+                    if (fileName.Length > 4)
+                    {
+                        string newFileName = fileName.Substring(0, fileName.Length - 4) + extension;
+                        string newFilePath = Path.Combine(directory, newFileName);
+
+                        try
+                        {
+                            File.Move(file, newFilePath);
+                            //MessageBox.Show($"File renamed to: {newFileName}");
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error renaming file: {ex.Message}");
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show($"File name is too short to remove 4 characters: {fileName}{extension}");
+                    }                    
+                }
+                MessageBox.Show("Files renamed successfully!");
+            }
+        }
     }
     
 }
