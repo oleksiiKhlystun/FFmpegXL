@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Globalization;
+using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace toMov
 {
@@ -15,6 +17,7 @@ namespace toMov
         //If you are not in the native directory, then you need to completely specify the path in quotation marks
         //Если находишься не в родной директории, то нужно полностью прописать путь в кавычках
         //ffmpeg -i test.avi testConvert.mov.
+        private Process ffmpegProcess; //это для ffmpeg
         private string finalFormat;
         private string soundOff;
         private string sound64k;
@@ -28,12 +31,16 @@ namespace toMov
         private string finscale;
         private string finspeed;
         private string atempo;
+        private string selectedFolderPath;
+        private Form recordF2;
+        
         public toMovMp4()
         {
             InitializeComponent();
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+         
         }
         private void upDownFps_ValueChanged(object sender, EventArgs e)
         {
@@ -212,6 +219,7 @@ namespace toMov
                     procStartInfo.Arguments = renameCommand;
                     var process = Process.Start(procStartInfo);
                     process.WaitForExit(); //Instructs the Process component to wait indefinitely for the associated process to exit.
+                    
 
                 }
                 MessageBox.Show("rename success!");
@@ -259,6 +267,66 @@ namespace toMov
                 MessageBox.Show("Files renamed successfully!");
             }
         }
+
+        private void btnSelectFolder_Click(object sender, EventArgs e)
+        {
+            using (FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog())
+            {
+                DialogResult result = folderBrowserDialog.ShowDialog();
+
+                if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
+                {
+                    selectedFolderPath = folderBrowserDialog.SelectedPath;
+                    //MessageBox.Show($"Selected folder: {selectedFolderPath}", "Folder Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    lblPathSelectFolder.Text = selectedFolderPath;
+                }
+            }
+        }
+
+        private void btnRectRecord_Click(object sender, EventArgs e)
+        {
+            recordF2 = new Form();
+            recordF2.Show();
+            recordF2.TransparencyKey = recordF2.BackColor;
+           
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+        const uint SWP_NOMOVE = 0x0002;
+        const uint SWP_NOZORDER = 0x0004;
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            if (selectedFolderPath == null)
+            {
+                MessageBox.Show("Please select a folder to save the recording.", "Folder Not Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (recordF2 == null)
+            {
+                MessageBox.Show("Please select an area to record.", "Area Not Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int x = recordF2.Left;
+            int y = recordF2.Top;
+            int width = recordF2.Width;
+            int height = recordF2.Height;
+            recordF2.Hide();
+            DateTime date = DateTime.Now;
+            CultureInfo ci = CultureInfo.InvariantCulture;
+            string outputFilePath = Path.Combine(selectedFolderPath, date.ToString("yyyyMMdd-HHmmss", ci) + ".mp4");
+            string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -offset_x {x} -offset_y {y} -video_size {width}x{height} -i desktop -r 30 \"{outputFilePath}\"";
+            //string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -video_size 640x480 -i desktop -offset 100,100 '{output}'";
+            //MessageBox.Show(captureCommand);
+            ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe");
+            procStartInfo.Arguments = $"-NoExit -Command \"{captureCommand}\"";
+            var process = Process.Start(procStartInfo);
+            Thread.Sleep(100);
+            SetWindowPos(process.MainWindowHandle, IntPtr.Zero, 0, 0, 500, 200, SWP_NOMOVE | SWP_NOZORDER);
+            process.WaitForExit();
+            recordF2.Show();
+        }
     }
-    
 }
