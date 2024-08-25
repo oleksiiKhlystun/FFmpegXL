@@ -65,6 +65,10 @@ namespace toMov
             this.lbl_RecordDesktop = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblPathSelectFolder = new System.Windows.Forms.Label();
+            this.chboxVideo = new System.Windows.Forms.CheckBox();
+            this.chboxAudio = new System.Windows.Forms.CheckBox();
+            this.cmbBoxAudio = new System.Windows.Forms.ComboBox();
+            this.lblStop = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -108,6 +112,7 @@ namespace toMov
             // 
             // btnSelConvert
             // 
+            this.btnSelConvert.BackColor = System.Drawing.SystemColors.Menu;
             this.btnSelConvert.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnSelConvert.Location = new System.Drawing.Point(12, 217);
             this.btnSelConvert.Name = "btnSelConvert";
@@ -115,7 +120,7 @@ namespace toMov
             this.btnSelConvert.TabIndex = 5;
             this.btnSelConvert.Text = "Select Convert";
             this.toolTipSelect.SetToolTip(this.btnSelConvert, "You can select multiple files");
-            this.btnSelConvert.UseVisualStyleBackColor = true;
+            this.btnSelConvert.UseVisualStyleBackColor = false;
             this.btnSelConvert.Click += new System.EventHandler(this.btnSelConvert_Click);
             // 
             // upDownFps
@@ -301,7 +306,7 @@ namespace toMov
             // btnSelectFolder
             // 
             this.btnSelectFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSelectFolder.Location = new System.Drawing.Point(12, 296);
+            this.btnSelectFolder.Location = new System.Drawing.Point(11, 350);
             this.btnSelectFolder.Name = "btnSelectFolder";
             this.btnSelectFolder.Size = new System.Drawing.Size(112, 23);
             this.btnSelectFolder.TabIndex = 34;
@@ -312,9 +317,9 @@ namespace toMov
             // btnRectRecord
             // 
             this.btnRectRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnRectRecord.Location = new System.Drawing.Point(12, 342);
+            this.btnRectRecord.Location = new System.Drawing.Point(11, 392);
             this.btnRectRecord.Name = "btnRectRecord";
-            this.btnRectRecord.Size = new System.Drawing.Size(112, 29);
+            this.btnRectRecord.Size = new System.Drawing.Size(112, 33);
             this.btnRectRecord.TabIndex = 35;
             this.btnRectRecord.Text = "2) Rectangle";
             this.btnRectRecord.UseVisualStyleBackColor = true;
@@ -322,13 +327,14 @@ namespace toMov
             // 
             // btnStart
             // 
+            this.btnStart.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.btnStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnStart.Location = new System.Drawing.Point(179, 342);
+            this.btnStart.Location = new System.Drawing.Point(162, 392);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(62, 34);
+            this.btnStart.Size = new System.Drawing.Size(79, 33);
             this.btnStart.TabIndex = 37;
             this.btnStart.Text = "Start";
-            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // chboxSound64k
@@ -407,17 +413,64 @@ namespace toMov
             // lblPathSelectFolder
             // 
             this.lblPathSelectFolder.AutoSize = true;
-            this.lblPathSelectFolder.Location = new System.Drawing.Point(14, 322);
+            this.lblPathSelectFolder.Location = new System.Drawing.Point(13, 376);
             this.lblPathSelectFolder.Name = "lblPathSelectFolder";
-            this.lblPathSelectFolder.Size = new System.Drawing.Size(32, 13);
+            this.lblPathSelectFolder.Size = new System.Drawing.Size(51, 13);
             this.lblPathSelectFolder.TabIndex = 36;
-            this.lblPathSelectFolder.Text = "Path:";
+            this.lblPathSelectFolder.Text = "Path: D:\\";
+            // 
+            // chboxVideo
+            // 
+            this.chboxVideo.AutoSize = true;
+            this.chboxVideo.Checked = true;
+            this.chboxVideo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chboxVideo.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.chboxVideo.Location = new System.Drawing.Point(12, 296);
+            this.chboxVideo.Name = "chboxVideo";
+            this.chboxVideo.Size = new System.Drawing.Size(61, 21);
+            this.chboxVideo.TabIndex = 38;
+            this.chboxVideo.Text = "video";
+            this.chboxVideo.UseVisualStyleBackColor = true;
+            // 
+            // chboxAudio
+            // 
+            this.chboxAudio.AutoSize = true;
+            this.chboxAudio.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.chboxAudio.Location = new System.Drawing.Point(11, 323);
+            this.chboxAudio.Name = "chboxAudio";
+            this.chboxAudio.Size = new System.Drawing.Size(62, 21);
+            this.chboxAudio.TabIndex = 39;
+            this.chboxAudio.Text = "audio";
+            this.chboxAudio.UseVisualStyleBackColor = true;
+            // 
+            // cmbBoxAudio
+            // 
+            this.cmbBoxAudio.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.cmbBoxAudio.FormattingEnabled = true;
+            this.cmbBoxAudio.Location = new System.Drawing.Point(79, 320);
+            this.cmbBoxAudio.Name = "cmbBoxAudio";
+            this.cmbBoxAudio.Size = new System.Drawing.Size(162, 21);
+            this.cmbBoxAudio.TabIndex = 40;
+            // 
+            // lblStop
+            // 
+            this.lblStop.AutoSize = true;
+            this.lblStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
+            this.lblStop.Location = new System.Drawing.Point(9, 428);
+            this.lblStop.Name = "lblStop";
+            this.lblStop.Size = new System.Drawing.Size(226, 13);
+            this.lblStop.TabIndex = 41;
+            this.lblStop.Text = "Stop Record: \"q\" in PowerShell, close window";
             // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(253, 388);
+            this.ClientSize = new System.Drawing.Size(253, 450);
+            this.Controls.Add(this.lblStop);
+            this.Controls.Add(this.cmbBoxAudio);
+            this.Controls.Add(this.chboxAudio);
+            this.Controls.Add(this.chboxVideo);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.lblPathSelectFolder);
             this.Controls.Add(this.btnRectRecord);
@@ -495,6 +548,10 @@ namespace toMov
         private System.Windows.Forms.Button btnRectRecord;
         private System.Windows.Forms.Label lblPathSelectFolder;
         private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.CheckBox chboxVideo;
+        private System.Windows.Forms.CheckBox chboxAudio;
+        private System.Windows.Forms.ComboBox cmbBoxAudio;
+        private System.Windows.Forms.Label lblStop;
     }
 }
 

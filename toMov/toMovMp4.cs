@@ -6,6 +6,8 @@ using System.IO;
 using System.Globalization;
 using System.Threading;
 using System.Runtime.InteropServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Text.RegularExpressions;
 
 namespace toMov
 {
@@ -31,12 +33,57 @@ namespace toMov
         private string finscale;
         private string finspeed;
         private string atempo;
-        private string selectedFolderPath;
+        private string selectedFolderPath = "D:\\";
         private Form recordF2;
-        
+        private int x;
+        private int y;
+        private int width;
+        private int height;
+
+
         public toMovMp4()
         {
             InitializeComponent();
+            LoadDevices(); // Заполняем ComboBox при загрузке формы
+        }
+        private void LoadDevices()
+        {
+            // Запуск команды ffmpeg для получения списка устройств
+            ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                Arguments = "/c ffmpeg -list_devices true -f dshow -i dummy"
+            };
+
+            Process process = new Process
+            {
+                StartInfo = procStartInfo
+            };
+
+            process.Start();
+
+            // Чтение вывода команды
+            string output = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+
+            // Парсинг вывода для получения списка устройств
+            Regex regex = new Regex(@"\""(.*?)\"" \((.*?)\)");
+            MatchCollection matches = regex.Matches(output);
+
+            foreach (Match match in matches)
+            {
+                // Добавление устройства в ComboBox
+                string deviceName = match.Groups[1].Value;
+                cmbBoxAudio.Items.Add(deviceName);
+            }
+
+            if (cmbBoxAudio.Items.Count > 0)
+            {
+                cmbBoxAudio.SelectedIndex = 1; // Выбираем первый элемент по умолчанию
+            }
         }
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -276,57 +323,101 @@ namespace toMov
 
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
                 {
-                    selectedFolderPath = folderBrowserDialog.SelectedPath;
-                    //MessageBox.Show($"Selected folder: {selectedFolderPath}", "Folder Selected", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    lblPathSelectFolder.Text = selectedFolderPath;
-                }
+                    selectedFolderPath = folderBrowserDialog.SelectedPath;                  
+                    lblPathSelectFolder.Text = "Path:" + selectedFolderPath;
+                }               
             }
         }
 
         private void btnRectRecord_Click(object sender, EventArgs e)
         {
-            recordF2 = new Form();
-            recordF2.Show();
-            recordF2.TransparencyKey = recordF2.BackColor;
-           
+            if (recordF2 == null || recordF2.IsDisposed)
+            {
+                recordF2 = new Form();
+                recordF2.Show();
+                recordF2.Opacity = 0.5;
+            }
+            else { }
         }
 
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
         const uint SWP_NOMOVE = 0x0002;
         const uint SWP_NOZORDER = 0x0004;
+
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (selectedFolderPath == null)
+            if (chboxVideo.Checked && !chboxAudio.Checked)
             {
-                MessageBox.Show("Please select a folder to save the recording.", "Folder Not Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                if (recordF2 == null || recordF2.IsDisposed)
+                {// Если прямоугольник не был открыт, используем базовые координаты
+                    x = 0;
+                    y = 0;
+                    width = 1920;
+                    height = 1080;
+                }
+                else
+                {// Если прямоугольник открыт, используем его размеры
+                    x = recordF2.Left;
+                    y = recordF2.Top;
+                    width = recordF2.Width;
+                    height = recordF2.Height;
+                    recordF2.Hide();
+                }
 
-            if (recordF2 == null)
+                string outputFilePath = Path.Combine(selectedFolderPath, DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + ".mp4");
+                string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -offset_x {x} -offset_y {y} -video_size {width}x{height} -i desktop -r 30 \"{outputFilePath}\"";
+                ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe");
+                procStartInfo.Arguments = $"-NoExit -Command \"{captureCommand}\"";
+                var process = Process.Start(procStartInfo);
+                Thread.Sleep(100);
+                SetWindowPos(process.MainWindowHandle, IntPtr.Zero, 0, 0, 400, 200, SWP_NOMOVE | SWP_NOZORDER);
+                process.WaitForExit();
+                if (recordF2 != null) { recordF2.Show(); }
+            }
+            else if (chboxVideo.Checked && chboxAudio.Checked)
             {
-                MessageBox.Show("Please select an area to record.", "Area Not Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+                if (recordF2 == null || recordF2.IsDisposed)
+                {// Если прямоугольник не был открыт, используем базовые координаты
+                    x = 0;
+                    y = 0;
+                    width = 1920;
+                    height = 1080;
+                }
+                else
+                {// Если прямоугольник открыт, используем его размеры
+                    x = recordF2.Left;
+                    y = recordF2.Top;
+                    width = recordF2.Width;
+                    height = recordF2.Height;
+                    recordF2.Hide();
+                }
+                string outputFilePath = Path.Combine(selectedFolderPath, DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + ".mp4");
+                string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -offset_x {x} -offset_y {y} -video_size {width}x{height} -i desktop -f dshow -i audio=\"{cmbBoxAudio.Text}\" \"{outputFilePath}\"";
+                //string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -offset_x {x} -offset_y {y} -video_size {width}x{height} " +
+                //        $"-i desktop -f dshow -i audio=\"{cmbBoxAudio.Text}\" -c:v libx264 -preset ultrafast -crf 23 " +
+                //        $"-c:a aac -b:a 128k \"{outputFilePath}\"";
 
-            int x = recordF2.Left;
-            int y = recordF2.Top;
-            int width = recordF2.Width;
-            int height = recordF2.Height;
-            recordF2.Hide();
-            DateTime date = DateTime.Now;
-            CultureInfo ci = CultureInfo.InvariantCulture;
-            string outputFilePath = Path.Combine(selectedFolderPath, date.ToString("yyyyMMdd-HHmmss", ci) + ".mp4");
-            string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -offset_x {x} -offset_y {y} -video_size {width}x{height} -i desktop -r 30 \"{outputFilePath}\"";
-            //string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -video_size 640x480 -i desktop -offset 100,100 '{output}'";
-            //MessageBox.Show(captureCommand);
-            ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe");
-            procStartInfo.Arguments = $"-NoExit -Command \"{captureCommand}\"";
-            var process = Process.Start(procStartInfo);
-            Thread.Sleep(100);
-            SetWindowPos(process.MainWindowHandle, IntPtr.Zero, 0, 0, 500, 200, SWP_NOMOVE | SWP_NOZORDER);
-            process.WaitForExit();
-            recordF2.Show();
+                ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe");
+                procStartInfo.Arguments = $"-NoExit -Command \"{captureCommand}\"";
+                var process = Process.Start(procStartInfo);
+                Thread.Sleep(100);
+                SetWindowPos(process.MainWindowHandle, IntPtr.Zero, 0, 0, 400, 200, SWP_NOMOVE | SWP_NOZORDER);
+                process.WaitForExit();
+                if (recordF2 != null) { recordF2.Show(); }  
+            }
+            else if (!chboxVideo.Checked && chboxAudio.Checked)
+            {
+                string outputFilePath = Path.Combine(selectedFolderPath, DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + ".mp3");
+                string captureCommand = $"ffmpeg -f dshow -i audio=\"{cmbBoxAudio.Text}\" -acodec libmp3lame \"{outputFilePath}\"";
+                ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe");
+                procStartInfo.Arguments = $"-NoExit -Command \"{captureCommand}\"";
+                var process = Process.Start(procStartInfo);
+                Thread.Sleep(100);
+                SetWindowPos(process.MainWindowHandle, IntPtr.Zero, 0, 0, 400, 200, SWP_NOMOVE | SWP_NOZORDER);
+                process.WaitForExit();
+            }
         }
+
     }
 }
