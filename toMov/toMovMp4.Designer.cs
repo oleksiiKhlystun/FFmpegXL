@@ -69,6 +69,7 @@ namespace toMov
             this.chboxAudio = new System.Windows.Forms.CheckBox();
             this.cmbBoxAudio = new System.Windows.Forms.ComboBox();
             this.lblStop = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.upDownFps)).BeginInit();
             this.SuspendLayout();
             // 
@@ -306,11 +307,11 @@ namespace toMov
             // btnSelectFolder
             // 
             this.btnSelectFolder.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnSelectFolder.Location = new System.Drawing.Point(11, 350);
+            this.btnSelectFolder.Location = new System.Drawing.Point(11, 347);
             this.btnSelectFolder.Name = "btnSelectFolder";
-            this.btnSelectFolder.Size = new System.Drawing.Size(112, 23);
+            this.btnSelectFolder.Size = new System.Drawing.Size(112, 26);
             this.btnSelectFolder.TabIndex = 34;
-            this.btnSelectFolder.Text = "1) Select folder";
+            this.btnSelectFolder.Text = "Select folder";
             this.btnSelectFolder.UseVisualStyleBackColor = true;
             this.btnSelectFolder.Click += new System.EventHandler(this.btnSelectFolder_Click);
             // 
@@ -319,9 +320,9 @@ namespace toMov
             this.btnRectRecord.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.btnRectRecord.Location = new System.Drawing.Point(11, 392);
             this.btnRectRecord.Name = "btnRectRecord";
-            this.btnRectRecord.Size = new System.Drawing.Size(112, 33);
+            this.btnRectRecord.Size = new System.Drawing.Size(112, 26);
             this.btnRectRecord.TabIndex = 35;
-            this.btnRectRecord.Text = "2) Rectangle";
+            this.btnRectRecord.Text = "Set Rectangle";
             this.btnRectRecord.UseVisualStyleBackColor = true;
             this.btnRectRecord.Click += new System.EventHandler(this.btnRectRecord_Click);
             // 
@@ -329,9 +330,9 @@ namespace toMov
             // 
             this.btnStart.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.btnStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.btnStart.Location = new System.Drawing.Point(162, 392);
+            this.btnStart.Location = new System.Drawing.Point(162, 394);
             this.btnStart.Name = "btnStart";
-            this.btnStart.Size = new System.Drawing.Size(79, 33);
+            this.btnStart.Size = new System.Drawing.Size(79, 26);
             this.btnStart.TabIndex = 37;
             this.btnStart.Text = "Start";
             this.btnStart.UseVisualStyleBackColor = false;
@@ -413,7 +414,7 @@ namespace toMov
             // lblPathSelectFolder
             // 
             this.lblPathSelectFolder.AutoSize = true;
-            this.lblPathSelectFolder.Location = new System.Drawing.Point(13, 376);
+            this.lblPathSelectFolder.Location = new System.Drawing.Point(12, 376);
             this.lblPathSelectFolder.Name = "lblPathSelectFolder";
             this.lblPathSelectFolder.Size = new System.Drawing.Size(51, 13);
             this.lblPathSelectFolder.TabIndex = 36;
@@ -462,11 +463,21 @@ namespace toMov
             this.lblStop.TabIndex = 41;
             this.lblStop.Text = "Stop Record: \"q\" in PowerShell, close window";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(128, 401);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(23, 13);
+            this.label2.TabIndex = 42;
+            this.label2.Text = "OR";
+            // 
             // toMovMp4
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(253, 450);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.lblStop);
             this.Controls.Add(this.cmbBoxAudio);
             this.Controls.Add(this.chboxAudio);
@@ -552,6 +563,7 @@ namespace toMov
         private System.Windows.Forms.CheckBox chboxAudio;
         private System.Windows.Forms.ComboBox cmbBoxAudio;
         private System.Windows.Forms.Label lblStop;
+        private System.Windows.Forms.Label label2;
     }
 }
 

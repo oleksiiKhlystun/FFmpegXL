@@ -35,11 +35,6 @@ namespace toMov
         private string atempo;
         private string selectedFolderPath = "D:\\";
         private Form recordF2;
-        private int x;
-        private int y;
-        private int width;
-        private int height;
-
 
         public toMovMp4()
         {
@@ -324,7 +319,7 @@ namespace toMov
                 if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(folderBrowserDialog.SelectedPath))
                 {
                     selectedFolderPath = folderBrowserDialog.SelectedPath;                  
-                    lblPathSelectFolder.Text = "Path:" + selectedFolderPath;
+                    lblPathSelectFolder.Text = selectedFolderPath;
                 }               
             }
         }
@@ -339,7 +334,7 @@ namespace toMov
             }
             else { }
         }
-
+        //Это нужно для изменения размера появляющегося окна PowerSHell
         [DllImport("user32.dll", SetLastError = true)]
         static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
         const uint SWP_NOMOVE = 0x0002;
@@ -347,56 +342,30 @@ namespace toMov
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            if (chboxVideo.Checked && !chboxAudio.Checked)
+            string rect = "";
+            if (chboxVideo.Checked)
             {
-                if (recordF2 == null || recordF2.IsDisposed)
-                {// Если прямоугольник не был открыт, используем базовые координаты
-                    x = 0;
-                    y = 0;
-                    width = 1920;
-                    height = 1080;
-                }
-                else
-                {// Если прямоугольник открыт, используем его размеры
-                    x = recordF2.Left;
-                    y = recordF2.Top;
-                    width = recordF2.Width;
-                    height = recordF2.Height;
+                if (recordF2 != null && !recordF2.IsDisposed)
+                {
+                    rect = $"-offset_x {recordF2.Left} -offset_y {recordF2.Top} -video_size {recordF2.Width}x{recordF2.Height}";
                     recordF2.Hide();
                 }
 
                 string outputFilePath = Path.Combine(selectedFolderPath, DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + ".mp4");
-                string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -offset_x {x} -offset_y {y} -video_size {width}x{height} -i desktop -r 30 \"{outputFilePath}\"";
-                ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe");
-                procStartInfo.Arguments = $"-NoExit -Command \"{captureCommand}\"";
-                var process = Process.Start(procStartInfo);
-                Thread.Sleep(100);
-                SetWindowPos(process.MainWindowHandle, IntPtr.Zero, 0, 0, 400, 200, SWP_NOMOVE | SWP_NOZORDER);
-                process.WaitForExit();
-                if (recordF2 != null) { recordF2.Show(); }
-            }
-            else if (chboxVideo.Checked && chboxAudio.Checked)
-            {
-                if (recordF2 == null || recordF2.IsDisposed)
-                {// Если прямоугольник не был открыт, используем базовые координаты
-                    x = 0;
-                    y = 0;
-                    width = 1920;
-                    height = 1080;
+
+                string captureCommand;
+
+                if (chboxAudio.Checked)
+                {
+                    captureCommand = $"ffmpeg -rtbufsize 150M -thread_queue_size 512 -f gdigrab {rect} -i desktop " +
+                        $"-f dshow -i audio=\"{cmbBoxAudio.Text}\" -framerate 30 -c:v libx264 -r 30 -preset ultrafast " +
+                        $"-tune zerolatency -crf 28 -pix_fmt yuv420p -c:a aac -strict -2 -ac 2 -b:a 128k \"{outputFilePath}\"";
                 }
                 else
-                {// Если прямоугольник открыт, используем его размеры
-                    x = recordF2.Left;
-                    y = recordF2.Top;
-                    width = recordF2.Width;
-                    height = recordF2.Height;
-                    recordF2.Hide();
+                {
+                    captureCommand = $"ffmpeg -f gdigrab -framerate 30 -thread_queue_size 512 {rect} -i desktop " +
+                        $"-c:v libx264 -preset ultrafast -crf 18 -pix_fmt yuv420p \"{outputFilePath}\"";
                 }
-                string outputFilePath = Path.Combine(selectedFolderPath, DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + ".mp4");
-                string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -offset_x {x} -offset_y {y} -video_size {width}x{height} -i desktop -f dshow -i audio=\"{cmbBoxAudio.Text}\" \"{outputFilePath}\"";
-                //string captureCommand = $"ffmpeg -f gdigrab -framerate 30 -offset_x {x} -offset_y {y} -video_size {width}x{height} " +
-                //        $"-i desktop -f dshow -i audio=\"{cmbBoxAudio.Text}\" -c:v libx264 -preset ultrafast -crf 23 " +
-                //        $"-c:a aac -b:a 128k \"{outputFilePath}\"";
 
                 ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe");
                 procStartInfo.Arguments = $"-NoExit -Command \"{captureCommand}\"";
@@ -404,7 +373,12 @@ namespace toMov
                 Thread.Sleep(100);
                 SetWindowPos(process.MainWindowHandle, IntPtr.Zero, 0, 0, 400, 200, SWP_NOMOVE | SWP_NOZORDER);
                 process.WaitForExit();
-                if (recordF2 != null) { recordF2.Show(); }  
+
+                // Проверяем, существует ли форма и не была ли она уничтожена до вызова Show
+                if (recordF2 != null && !recordF2.IsDisposed)
+                {
+                    recordF2.Show();
+                }
             }
             else if (!chboxVideo.Checked && chboxAudio.Checked)
             {
