@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Diagnostics;
-using System.Linq;
 using System.IO;
 using System.Globalization;
 using System.Threading;
 using System.Runtime.InteropServices;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Text.RegularExpressions;
 
 namespace toMov
@@ -23,6 +21,7 @@ namespace toMov
         private string finalFormat;
         private string soundOff;
         private string sound64k;
+        private string convertAudio;
         private string selectFile;
         private string outFile;
         private string outFps;
@@ -69,15 +68,14 @@ namespace toMov
             MatchCollection matches = regex.Matches(output);
 
             foreach (Match match in matches)
-            {
-                // Добавление устройства в ComboBox
+            {// Добавление устройства в ComboBox
                 string deviceName = match.Groups[1].Value;
-                cmbBoxAudio.Items.Add(deviceName);
+                cmbBoxRecordAudio.Items.Add(deviceName);
             }
 
-            if (cmbBoxAudio.Items.Count > 0)
-            {
-                cmbBoxAudio.SelectedIndex = 1; // Выбираем первый элемент по умолчанию
+            if (cmbBoxRecordAudio.Items.Count > 0)
+            {// Выбираем первый элемент по умолчанию
+                cmbBoxRecordAudio.SelectedIndex = 1; 
             }
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -92,29 +90,14 @@ namespace toMov
         {
 
         }
-    
-        private void chboxSound_CheckedChanged(object sender, EventArgs e)
-        {
-            if (chboxSoundOff.Checked)
-            {
-                chboxSound64k.Checked = false;
-            }
-        }
-
         private void chboxResize2_CheckedChanged(object sender, EventArgs e)
         {
-            CheckBox chboxResize2 = (CheckBox)sender;
-            if (chboxResize2.Checked)
-            {
-                radioBtn_gif.Checked = false;
-            }
         }
         private void chboxSpeedM2_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox chboxSpeedM2 = (CheckBox)sender;
             if (chboxSpeedM2.Checked)
-            {
-                //chboxSoundOff.Checked = true;                
+            {                
                 chboxSpeedD2.Checked = false;
             }
        
@@ -125,7 +108,6 @@ namespace toMov
             CheckBox chboxSpeedD2 = (CheckBox)sender;
             if (chboxSpeedD2.Checked)
             {
-                //chboxSoundOff.Checked = true;
                 chboxSpeedM2.Checked = false;
             }
    
@@ -136,136 +118,83 @@ namespace toMov
         private void chboxTo_CheckedChanged(object sender, EventArgs e)
         {    
         }
-
-        private void radioBtn_mov_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-
-        private void radioBtn_mp4_CheckedChanged(object sender, EventArgs e)
-        {
-        }
-        private void radioBtn_gif_CheckedChanged(object sender, EventArgs e)
-        {
-            RadioButton radioBtn_gif = (RadioButton)sender;
-            if (radioBtn_gif.Checked)
-            {
-                chboxResize2.Checked = false;               
-            }
-        }
         private void btnSelConvert_Click(object sender, EventArgs e)
         {
-            outFps = chboxFps.Checked ? $"fps={upDownFps.Value}," : "";
-            soundOff = chboxSoundOff.Checked ? " -an " : "";
-            sound64k = chboxSound64k.Checked ? " -b:a 64k " : "";
-            trimSS = chboxTrim.Checked ? $" -ss {mtxtTrim.Text} " : "";
-            trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text} " : "";
-            if (chboxResize2.Checked){ finscale = "scale=trunc(iw/4)*2:trunc(ih/4)*2"; }
-            else if (radioBtn_gif.Checked) { finscale = "scale = 640:-1:flags = lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"; }
-            else { finscale = "scale = trunc(iw/2)*2:trunc(ih/2)*2"; }
+            outFps = chboxFps.Checked ? $" -r {upDownFps.Value}" : "";
+            convertAudio = cmbBoxConvertAudio.Text=="off" ? " -an" : $" -b:a {cmbBoxConvertAudio.Text}";
+            trimSS = chboxTrim.Checked ? $" -ss {mtxtTrim.Text}" : "";
+            trimTo = chboxTo.Checked ? $" -to {mtxtTo.Text}" : "";
 
-            if (chboxSpeedM2.Checked) { finspeed = "setpts = 0.5 * PTS"; atempo = "atempo=2.0"; }
-            else if (chboxSpeedD2.Checked) { finspeed = "setpts = 2.0 * PTS"; atempo = "atempo=0.5"; }
-            else { finspeed = "setpts = 1.0 * PTS"; atempo = "atempo=1.0"; }
+            if (chboxResize2.Checked)
+            {
+                finscale = "scale=trunc(iw/4)*2:trunc(ih/4)*2";
+            }
+            else
+            {
+                finscale = "scale=trunc(iw/2)*2:trunc(ih/2)*2";
+            }
 
-            //foreach (var ch in Controls.OfType<CheckBox>())
-            foreach (var rb in Controls.OfType<RadioButton>())
-                if (rb.Checked)
+            if (chboxSpeedM2.Checked)
+            {
+                finspeed = "setpts=0.5*PTS";
+                atempo = "atempo=2.0";
+            }
+            else if (chboxSpeedD2.Checked)
+            {
+                finspeed = "setpts=2.0*PTS";
+                atempo = "atempo=0.5";
+            }
+            else
+            {
+                finspeed = "setpts=1.0*PTS";
+                atempo = "atempo=1.0";
+            }
+
+            finalFormat = cmbBoxOut.Text != "png" ? "." + cmbBoxOut.Text : "%04d." + cmbBoxOut.Text;
+            yuv420p = (cmbBoxOut.Text == "mp4" || cmbBoxOut.Text == "mov") ? " -pix_fmt yuv420p" : "";
+            string outGif = cmbBoxOut.Text == "gif" ? ":flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" : "";
+            string filter0aAtempo = cmbBoxConvertAudio.Text == "off" ? $"" : $";[0:a]{atempo}[a]";
+            string filterMapA = cmbBoxConvertAudio.Text == "off" ? $"" : $" -map \'[a]\'";
+            string filterComplex = $" -filter_complex \'[0:v]{finscale}{outGif},{finspeed}[v]{filter0aAtempo}\' -map \'[v]\'{filterMapA}";
+
+            OpenFileDialog selectFileDialog = new OpenFileDialog
+            {
+                Multiselect = true,
+                //Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm,png)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm;*.png;"
+            };
+
+            if (selectFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                foreach (string file in selectFileDialog.FileNames)
                 {
-                    finalFormat = rb.Text != "png" ? (finalFormat = "." + rb.Text) : (finalFormat = "%04d." + rb.Text);
-                    yuv420p = (rb.Text == "mp4")||(rb.Text == "mov") ? " -pix_fmt yuv420p " : "";
+                    DateTime date = DateTime.Now;
+                    CultureInfo ci = CultureInfo.InvariantCulture;
+                    string fileName = Path.GetFileNameWithoutExtension(file).Replace(" ", "");
+
                     
-                    // Configure open file dialog box
-                    OpenFileDialog selectFileDialog = new OpenFileDialog();
-                    selectFileDialog.Multiselect = true;
-                    selectFileDialog.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm,png)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm;*.png;"; // Filter files by extension
-                    if (selectFileDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        foreach (string file in selectFileDialog.FileNames)
-                        {
-                            DateTime date = DateTime.Now;
-                            CultureInfo ci = CultureInfo.InvariantCulture;
-                            string fileName = Path.GetFileNameWithoutExtension(file).Replace(" ", "_");
-                            //MessageBox.Show(Path.GetExtension(file));
-                            selectFile = Path.GetExtension(file) != ".png" ? $" \"{Path.GetFileName(file)}\" " : $" {fileName.Remove(fileName.Length - 4, 4)}%04d.png ";
-                            outFile = rb.Text != "png" ? $" {fileName}{date.ToString("mmss", ci)}{finalFormat}": $" {fileName}{finalFormat}";                           
-                            //finalCommand = "/c ffmpeg -i" +selectFile + soundOff + trimSS + trimTo + $" -vf \"[0:v]{outFps}{finscale},{finspeed}[v];[0:a]{atempo}[a]\" " + sound64k + yuv420p + outFile; // + togif  + speedM2 + speedD2 + resize2+ outFps"-pix_fmt yuv420p"
-                            finalCommand = $"/c ffmpeg -i {selectFile} {soundOff} {trimSS} {trimTo} -filter_complex \"[0:v]{outFps}{finscale},{finspeed}[v];[0:a]{atempo}[a]\" -map \"[v]\" -map \"[a]\" {sound64k} {yuv420p} {outFile}";
-                            //MessageBox.Show(finalCommand); // testing final command
-                            // Converting
-                            ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
-                            procStartInfo.WorkingDirectory = Path.GetDirectoryName(file);
-                            // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //this batch not needed
-                            procStartInfo.Arguments = finalCommand;
-                            var process = Process.Start(procStartInfo);
-                            process.WaitForExit();//Instructs the Process component to wait indefinitely for the associated process to exit.
-                            if (Path.GetExtension(file) == ".png")
-                            {
-                                break;
-                            }
-                        }
-                       
-                    }  
-                }
-        }
+                    selectFile = $"\'{Path.GetFullPath(file)}\'";
 
-        private void btnFastConvert_Click(object sender, EventArgs e)
-        {
-             foreach (var rb in Controls.OfType<RadioButton>())
-                if (rb.Checked)
-                {
-                
-                    OpenFileDialog selectFileDialog2 = new OpenFileDialog();
-                    selectFileDialog2.Multiselect = true;
-                    selectFileDialog2.Filter = "Videos(avi,mp4,mov,mkv,3gp,flv,mpg,ogg,wmv,webm)|*.avi;*.mp4;*.mov;*.mkv;*.3gp;*.flv;*.mpg;*.ogg;*.wmv;*.webm;"; // Filter files by extension
-                    if (selectFileDialog2.ShowDialog() == DialogResult.OK)
+                    outFile = cmbBoxOut.Text != "png"
+                        ? $"\"{Path.GetDirectoryName(file)}\\{fileName}{date.ToString("mmss", ci)}{finalFormat}\""
+                        : $"\"{Path.GetDirectoryName(file)}\\{fileName}{finalFormat}\"";
+
+                    finalCommand = $"ffmpeg -i {selectFile}{outFps}{trimSS}{trimTo}{filterComplex}{convertAudio}{yuv420p} {outFile}";
+                    //MessageBox.Show(finalCommand);
+                    ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe")
                     {
-                        foreach (string file in selectFileDialog2.FileNames)
-                        {
-                            DateTime date = DateTime.Now;
-                            CultureInfo ci = CultureInfo.InvariantCulture;
-                            string fileName = Path.GetFileNameWithoutExtension(file).Replace(" ", "_");
-                            finalCommand = $"/c ffmpeg -i \"{Path.GetFileName(file)}\" -c:v copy -c:a copy {fileName}2.{rb.Text}";
-                            
-                            //MessageBox.Show(finalCommand); // testing final command
-                            ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
-                            procStartInfo.WorkingDirectory = Path.GetDirectoryName(file);
-                            // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //trying batch
-                            procStartInfo.Arguments = finalCommand;
-                            var process = Process.Start(procStartInfo);
-                            process.WaitForExit();//Instructs the Process component to wait indefinitely for the associated process to exit.
-                        }
+                        WorkingDirectory = Path.GetDirectoryName(file),
+                        Arguments = finalCommand
+                    };
+
+                    var process = Process.Start(procStartInfo);
+                    process.WaitForExit();
+
+                    if (Path.GetExtension(file) == ".png")
+                    {
+                        break;
                     }
                 }
-        }
-
-        private void btnRename_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog selectFileDialog3 = new OpenFileDialog();
-           // selectFileDialog3.Title = "Copy file parametres";
-            selectFileDialog3.Multiselect = true;
-            selectFileDialog3.Filter = "png|*.png;"; // Filter files by extension
-            if (selectFileDialog3.ShowDialog() == DialogResult.OK)
-            {
-                int i = 0;
-                foreach (string file in selectFileDialog3.FileNames)
-                {
-                    i++;
-                    string fileName =  Path.GetFileNameWithoutExtension(file).Remove(Path.GetFileNameWithoutExtension(file).Length - 4, 4)   + i.ToString("0000") +".png";
-                    string renameCommand = $"/c ren {Path.GetFileName(file)} {fileName}";
-
-                    //MessageBox.Show(renameCommand); // testing final command
-                    ProcessStartInfo procStartInfo = new ProcessStartInfo("cmd.exe");
-                    procStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                    procStartInfo.WorkingDirectory = Path.GetDirectoryName(file);
-                    // procStartInfo.Arguments = "/c FOR /F \"tokens = *\" %G IN ('dir /b 1.avi,gun_reload.mp4') DO ffmpeg -i \" % G\" -acodec copy \" % ~nG.mkv\" "; //trying batch
-                    procStartInfo.Arguments = renameCommand;
-                    var process = Process.Start(procStartInfo);
-                    process.WaitForExit(); //Instructs the Process component to wait indefinitely for the associated process to exit.
-                    
-
-                }
-                MessageBox.Show("rename success!");
-            }  
+            }
         }
 
         private void btnRenameLast4_Click(object sender, EventArgs e)
@@ -294,7 +223,6 @@ namespace toMov
                         try
                         {
                             File.Move(file, newFilePath);
-                            //MessageBox.Show($"File renamed to: {newFileName}");
                         }
                         catch (Exception ex)
                         {
@@ -347,7 +275,9 @@ namespace toMov
             {
                 if (recordF2 != null && !recordF2.IsDisposed)
                 {
-                    rect = $"-offset_x {recordF2.Left} -offset_y {recordF2.Top} -video_size {recordF2.Width}x{recordF2.Height}";
+                    int width = ((recordF2.Width) / 2) * 2;//делаем четное количество пикселей
+                    int height = ((recordF2.Height) / 2) * 2;
+                    rect = $"-offset_x {recordF2.Left} -offset_y {recordF2.Top} -video_size {width}x{height}";
                     recordF2.Hide();
                 }
 
@@ -358,7 +288,7 @@ namespace toMov
                 if (chboxAudio.Checked)
                 {
                     captureCommand = $"ffmpeg -rtbufsize 150M -thread_queue_size 512 -f gdigrab {rect} -i desktop " +
-                        $"-f dshow -i audio=\"{cmbBoxAudio.Text}\" -framerate 30 -c:v libx264 -r 30 -preset ultrafast " +
+                        $"-f dshow -i audio=\"{cmbBoxRecordAudio.Text}\" -framerate 30 -c:v libx264 -r 30 -preset ultrafast " +
                         $"-tune zerolatency -crf 28 -pix_fmt yuv420p -c:a aac -strict -2 -ac 2 -b:a 128k \"{outputFilePath}\"";
                 }
                 else
@@ -383,7 +313,7 @@ namespace toMov
             else if (!chboxVideo.Checked && chboxAudio.Checked)
             {
                 string outputFilePath = Path.Combine(selectedFolderPath, DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + ".mp3");
-                string captureCommand = $"ffmpeg -f dshow -i audio=\"{cmbBoxAudio.Text}\" -acodec libmp3lame \"{outputFilePath}\"";
+                string captureCommand = $"ffmpeg -f dshow -i audio=\"{cmbBoxRecordAudio.Text}\" -acodec libmp3lame \"{outputFilePath}\"";
                 ProcessStartInfo procStartInfo = new ProcessStartInfo("powershell.exe");
                 procStartInfo.Arguments = $"-NoExit -Command \"{captureCommand}\"";
                 var process = Process.Start(procStartInfo);
