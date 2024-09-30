@@ -289,7 +289,7 @@ namespace toMov
                 {
                     captureCommand = $"ffmpeg -rtbufsize 150M -thread_queue_size 512 -f gdigrab {rect} -i desktop " +
                         $"-f dshow -i audio=\"{cmbBoxRecordAudio.Text}\" -framerate 30 -c:v libx264 -r 30 -preset ultrafast " +
-                        $"-tune zerolatency -crf 28 -pix_fmt yuv420p -c:a aac -strict -2 -ac 2 -b:a 128k \"{outputFilePath}\"";
+                        $"-tune zerolatency -crf 18 -pix_fmt yuv420p -c:a aac -strict -2 -ac 2 -b:a 128k \"{outputFilePath}\"";
                 }
                 else
                 {
